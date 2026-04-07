@@ -11519,7 +11519,7 @@ msgstr ""
 "Segure %s enquanto solta para sobrescrever uma superfície específica."
 
 msgid "Draw Calls: %d"
-msgstr "Chamadas de Desenho: %d"
+msgstr "Draw Calls: %d"
 
 msgid "CPU Time: %s ms"
 msgstr "Tempo de CPU: %s ms"
