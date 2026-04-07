@@ -1021,8 +1021,7 @@ void register_scene_types() {
 	GDREGISTER_CLASS(RibbonTrailMesh);
 	GDREGISTER_CLASS(PointMesh);
 	GDREGISTER_ABSTRACT_CLASS(BaseMaterial3D);
-	GDREGISTER_CLASS(StandardMaterial3D);
-	GDREGISTER_CLASS(ORMMaterial3D);
+	GDREGISTER_CLASS(Material3D);
 	GDREGISTER_CLASS(ProceduralSkyMaterial);
 	GDREGISTER_CLASS(PanoramaSkyMaterial);
 	GDREGISTER_CLASS(PhysicalSkyMaterial);
@@ -1293,7 +1292,7 @@ void register_scene_types() {
 	ClassDB::add_compatibility_class("SkeletonIK", "SkeletonIK3D");
 	ClassDB::add_compatibility_class("Spatial", "Node3D");
 	ClassDB::add_compatibility_class("SpatialGizmo", "Node3DGizmo");
-	ClassDB::add_compatibility_class("SpatialMaterial", "StandardMaterial3D");
+	ClassDB::add_compatibility_class("SpatialMaterial", "Material3D");
 	ClassDB::add_compatibility_class("SpotLight", "SpotLight3D");
 	ClassDB::add_compatibility_class("Sprite", "Sprite2D");
 	ClassDB::add_compatibility_class("StaticBody", "StaticBody3D");
@@ -1478,7 +1477,7 @@ void unregister_scene_types() {
 		resource_loader_shader_include.unref();
 	}
 
-	// StandardMaterial3D is not initialized when 3D is disabled, so it shouldn't be cleaned up either
+	// Material3D is not initialized when 3D is disabled, so it shouldn't be cleaned up either
 #ifndef _3D_DISABLED
 	BaseMaterial3D::finish_shaders();
 	PhysicalSkyMaterial::cleanup_shader();

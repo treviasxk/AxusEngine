@@ -330,14 +330,14 @@ void Path3DGizmo::commit_handle(int p_id, bool p_secondary, const Variant &p_res
 void Path3DGizmo::redraw() {
 	clear();
 
-	Ref<StandardMaterial3D> path_thin_material = gizmo_plugin->get_material("path_thin_material", this);
-	Ref<StandardMaterial3D> path_tilt_material = gizmo_plugin->get_material("path_tilt_material", this);
-	Ref<StandardMaterial3D> path_tilt_muted_material = gizmo_plugin->get_material("path_tilt_muted_material", this);
-	Ref<StandardMaterial3D> handles_material = gizmo_plugin->get_material("handles");
-	Ref<StandardMaterial3D> first_pt_handle_material = gizmo_plugin->get_material("first_pt_handle");
-	Ref<StandardMaterial3D> last_pt_handle_material = gizmo_plugin->get_material("last_pt_handle");
-	Ref<StandardMaterial3D> closed_pt_handle_material = gizmo_plugin->get_material("closed_pt_handle");
-	Ref<StandardMaterial3D> sec_handles_material = gizmo_plugin->get_material("sec_handles");
+	Ref<Material3D> path_thin_material = gizmo_plugin->get_material("path_thin_material", this);
+	Ref<Material3D> path_tilt_material = gizmo_plugin->get_material("path_tilt_material", this);
+	Ref<Material3D> path_tilt_muted_material = gizmo_plugin->get_material("path_tilt_muted_material", this);
+	Ref<Material3D> handles_material = gizmo_plugin->get_material("handles");
+	Ref<Material3D> first_pt_handle_material = gizmo_plugin->get_material("first_pt_handle");
+	Ref<Material3D> last_pt_handle_material = gizmo_plugin->get_material("last_pt_handle");
+	Ref<Material3D> closed_pt_handle_material = gizmo_plugin->get_material("closed_pt_handle");
+	Ref<Material3D> sec_handles_material = gizmo_plugin->get_material("sec_handles");
 
 	first_pt_handle_material->set_albedo(Color(0.2, 1.0, 0.0));
 	last_pt_handle_material->set_albedo(Color(1.0, 0.2, 0.0));
@@ -354,11 +354,11 @@ void Path3DGizmo::redraw() {
 	if (path_color != Color(0.0, 0.0, 0.0)) {
 		debug_material.instantiate();
 		debug_material->set_albedo(path_color);
-		debug_material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		debug_material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-		debug_material->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-		debug_material->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-		debug_material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		debug_material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		debug_material->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+		debug_material->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+		debug_material->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+		debug_material->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 	}
 
 	real_t interval = 0.1;
@@ -1143,11 +1143,11 @@ void Path3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	Ref<Curve3D> curve = path->get_curve();
 
-	Ref<StandardMaterial3D> handle_material = get_material("handles", p_gizmo);
-	Ref<StandardMaterial3D> first_pt_handle_material = get_material("first_pt_handle", p_gizmo);
-	Ref<StandardMaterial3D> last_pt_handle_material = get_material("last_pt_handle", p_gizmo);
-	Ref<StandardMaterial3D> closed_pt_handle_material = get_material("closed_pt_handle", p_gizmo);
-	Ref<StandardMaterial3D> selected_pt_handle_material = get_material("selected_pt_handle", p_gizmo);
+	Ref<Material3D> handle_material = get_material("handles", p_gizmo);
+	Ref<Material3D> first_pt_handle_material = get_material("first_pt_handle", p_gizmo);
+	Ref<Material3D> last_pt_handle_material = get_material("last_pt_handle", p_gizmo);
+	Ref<Material3D> closed_pt_handle_material = get_material("closed_pt_handle", p_gizmo);
+	Ref<Material3D> selected_pt_handle_material = get_material("selected_pt_handle", p_gizmo);
 
 	first_pt_handle_material->set_albedo(Color(0.2, 1.0, 0.0));
 	last_pt_handle_material->set_albedo(Color(1.0, 0.2, 0.0));

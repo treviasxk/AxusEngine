@@ -17094,10 +17094,10 @@ msgid "Nothing is visible because no mesh has been assigned."
 msgstr "چیزی پدیدار نیست چون هیچ مشی واگذار نشده است."
 
 msgid ""
-"CPUParticles3D animation requires the usage of a StandardMaterial3D whose "
+"CPUParticles3D animation requires the usage of a Material3D whose "
 "Billboard Mode is set to \"Particle Billboard\"."
 msgstr ""
-"پویانمایی CPUParticles3D نیازمند استفاده از یک StandardMaterial3D است که حالت "
+"پویانمایی CPUParticles3D نیازمند استفاده از یک Material3D است که حالت "
 "بیلبورد آن روی \"Particle Billboard\" تنظیم شده باشد."
 
 msgid ""

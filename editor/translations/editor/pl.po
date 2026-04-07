@@ -20729,10 +20729,10 @@ msgid "Nothing is visible because no mesh has been assigned."
 msgstr "Nic nie jest widoczne, ponieważ nie przypisano żadnej siatki."
 
 msgid ""
-"CPUParticles3D animation requires the usage of a StandardMaterial3D whose "
+"CPUParticles3D animation requires the usage of a Material3D whose "
 "Billboard Mode is set to \"Particle Billboard\"."
 msgstr ""
-"Animacja CPUParticles3D wymaga użycia StandardMaterial3D, którego tryb "
+"Animacja CPUParticles3D wymaga użycia Material3D, którego tryb "
 "Billboard jest ustawiony na \"Particle Billboard\"."
 
 msgid "Decals are only available when using the Forward+ or Mobile renderer."

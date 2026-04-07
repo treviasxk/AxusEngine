@@ -66,8 +66,8 @@ class NavigationObstacle3DEditorPlugin : public EditorPlugin {
 
 	NavigationObstacle3D *obstacle_node = nullptr;
 
-	Ref<StandardMaterial3D> line_material;
-	Ref<StandardMaterial3D> handle_material;
+	Ref<Material3D> line_material;
+	Ref<Material3D> handle_material;
 
 	RID point_lines_mesh_rid;
 	RID point_lines_instance_rid;

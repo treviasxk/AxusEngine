@@ -986,11 +986,11 @@ void EditorResourcePicker::drop_data_fw(const Point2 &p_point, const Variant &p_
 
 				if (at == "BaseMaterial3D" && Ref<Texture2D>(dropped_resource).is_valid()) {
 					// Use existing resource if possible and only replace its data.
-					Ref<StandardMaterial3D> mat = edited_resource;
+					Ref<Material3D> mat = edited_resource;
 					if (mat.is_null()) {
 						mat.instantiate();
 					}
-					mat->set_texture(StandardMaterial3D::TextureParam::TEXTURE_ALBEDO, dropped_resource);
+					mat->set_texture(Material3D::TextureParam::TEXTURE_ALBEDO, dropped_resource);
 					dropped_resource = mat;
 					break;
 				}

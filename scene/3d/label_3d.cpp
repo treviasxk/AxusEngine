@@ -368,7 +368,7 @@ void Label3D::_generate_glyph_surfaces(const Glyph &p_glyph, Vector2 &r_offset, 
 		if (!surfaces.has(key)) {
 			SurfaceData surf;
 			surf.material = RenderingServer::get_singleton()->material_create();
-			// Set defaults for material, names need to match up those in StandardMaterial3D
+			// Set defaults for material, names need to match up those in Material3D
 			RS::get_singleton()->material_set_param(surf.material, "albedo", Color(1, 1, 1, 1));
 			RS::get_singleton()->material_set_param(surf.material, "specular", 0.5);
 			RS::get_singleton()->material_set_param(surf.material, "metallic", 0.0);
@@ -395,7 +395,7 @@ void Label3D::_generate_glyph_surfaces(const Glyph &p_glyph, Vector2 &r_offset, 
 			}
 
 			RID shader_rid;
-			StandardMaterial3D::get_material_for_2d(get_draw_flag(FLAG_SHADED), mat_transparency, get_draw_flag(FLAG_DOUBLE_SIDED), get_billboard_mode() == StandardMaterial3D::BILLBOARD_ENABLED, get_billboard_mode() == StandardMaterial3D::BILLBOARD_FIXED_Y, msdf, get_draw_flag(FLAG_DISABLE_DEPTH_TEST), get_draw_flag(FLAG_FIXED_SIZE), texture_filter, alpha_antialiasing_mode, false, &shader_rid);
+			Material3D::get_material_for_2d(get_draw_flag(FLAG_SHADED), mat_transparency, get_draw_flag(FLAG_DOUBLE_SIDED), get_billboard_mode() == Material3D::BILLBOARD_ENABLED, get_billboard_mode() == Material3D::BILLBOARD_FIXED_Y, msdf, get_draw_flag(FLAG_DISABLE_DEPTH_TEST), get_draw_flag(FLAG_FIXED_SIZE), texture_filter, alpha_antialiasing_mode, false, &shader_rid);
 
 			RS::get_singleton()->material_set_shader(surf.material, shader_rid);
 			RS::get_singleton()->material_set_param(surf.material, "texture_albedo", tex);
@@ -625,13 +625,13 @@ void Label3D::_shape() {
 	}
 
 	switch (get_billboard_mode()) {
-		case StandardMaterial3D::BILLBOARD_ENABLED: {
+		case Material3D::BILLBOARD_ENABLED: {
 			real_t size_new = MAX(Math::abs(aabb.position.x), (aabb.position.x + aabb.size.x));
 			size_new = MAX(size_new, MAX(Math::abs(aabb.position.y), (aabb.position.y + aabb.size.y)));
 			aabb.position = Vector3(-size_new, -size_new, -size_new);
 			aabb.size = Vector3(size_new * 2.0, size_new * 2.0, size_new * 2.0);
 		} break;
-		case StandardMaterial3D::BILLBOARD_FIXED_Y: {
+		case Material3D::BILLBOARD_FIXED_Y: {
 			real_t size_new = MAX(Math::abs(aabb.position.x), (aabb.position.x + aabb.size.x));
 			aabb.position.x = -size_new;
 			aabb.position.z = -size_new;
@@ -999,7 +999,7 @@ bool Label3D::get_draw_flag(DrawFlags p_flag) const {
 	return flags[p_flag];
 }
 
-void Label3D::set_billboard_mode(StandardMaterial3D::BillboardMode p_mode) {
+void Label3D::set_billboard_mode(Material3D::BillboardMode p_mode) {
 	ERR_FAIL_INDEX(p_mode, 3);
 	if (billboard_mode != p_mode) {
 		billboard_mode = p_mode;
@@ -1007,7 +1007,7 @@ void Label3D::set_billboard_mode(StandardMaterial3D::BillboardMode p_mode) {
 	}
 }
 
-StandardMaterial3D::BillboardMode Label3D::get_billboard_mode() const {
+Material3D::BillboardMode Label3D::get_billboard_mode() const {
 	return billboard_mode;
 }
 
@@ -1020,14 +1020,14 @@ void Label3D::set_alpha_cut_mode(AlphaCutMode p_mode) {
 	}
 }
 
-void Label3D::set_texture_filter(StandardMaterial3D::TextureFilter p_filter) {
+void Label3D::set_texture_filter(Material3D::TextureFilter p_filter) {
 	if (texture_filter != p_filter) {
 		texture_filter = p_filter;
 		_queue_update();
 	}
 }
 
-StandardMaterial3D::TextureFilter Label3D::get_texture_filter() const {
+Material3D::TextureFilter Label3D::get_texture_filter() const {
 	return texture_filter;
 }
 

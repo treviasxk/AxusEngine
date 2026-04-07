@@ -89,10 +89,10 @@ private:
 	AlphaCutMode alpha_cut = ALPHA_CUT_DISABLED;
 	float alpha_scissor_threshold = 0.5;
 	float alpha_hash_scale = 1.0;
-	StandardMaterial3D::AlphaAntiAliasing alpha_antialiasing_mode = StandardMaterial3D::ALPHA_ANTIALIASING_OFF;
+	Material3D::AlphaAntiAliasing alpha_antialiasing_mode = Material3D::ALPHA_ANTIALIASING_OFF;
 	float alpha_antialiasing_edge = 0.0f;
-	StandardMaterial3D::BillboardMode billboard_mode = StandardMaterial3D::BILLBOARD_DISABLED;
-	StandardMaterial3D::TextureFilter texture_filter = StandardMaterial3D::TEXTURE_FILTER_LINEAR_WITH_MIPMAPS;
+	Material3D::BillboardMode billboard_mode = Material3D::BILLBOARD_DISABLED;
+	Material3D::TextureFilter texture_filter = Material3D::TEXTURE_FILTER_LINEAR_WITH_MIPMAPS;
 	bool redraw_needed = false;
 	bool pending_update = false;
 	void _im_update();
@@ -163,11 +163,11 @@ public:
 	void set_alpha_antialiasing_edge(float p_edge);
 	float get_alpha_antialiasing_edge() const;
 
-	void set_billboard_mode(StandardMaterial3D::BillboardMode p_mode);
-	StandardMaterial3D::BillboardMode get_billboard_mode() const;
+	void set_billboard_mode(Material3D::BillboardMode p_mode);
+	Material3D::BillboardMode get_billboard_mode() const;
 
-	void set_texture_filter(StandardMaterial3D::TextureFilter p_filter);
-	StandardMaterial3D::TextureFilter get_texture_filter() const;
+	void set_texture_filter(Material3D::TextureFilter p_filter);
+	Material3D::TextureFilter get_texture_filter() const;
 
 	virtual Rect2 get_item_rect() const = 0;
 

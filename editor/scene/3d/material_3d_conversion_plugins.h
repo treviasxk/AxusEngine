@@ -32,17 +32,8 @@
 
 #include "editor/plugins/editor_resource_conversion_plugin.h"
 
-class StandardMaterial3DConversionPlugin : public EditorResourceConversionPlugin {
-	GDCLASS(StandardMaterial3DConversionPlugin, EditorResourceConversionPlugin);
-
-public:
-	virtual String converts_to() const override;
-	virtual bool handles(const Ref<Resource> &p_resource) const override;
-	virtual Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
-};
-
-class ORMMaterial3DConversionPlugin : public EditorResourceConversionPlugin {
-	GDCLASS(ORMMaterial3DConversionPlugin, EditorResourceConversionPlugin);
+class Material3DConversionPlugin : public EditorResourceConversionPlugin {
+	GDCLASS(Material3DConversionPlugin, EditorResourceConversionPlugin);
 
 public:
 	virtual String converts_to() const override;

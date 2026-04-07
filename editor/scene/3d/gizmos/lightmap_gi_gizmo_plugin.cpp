@@ -44,15 +44,15 @@ LightmapGIGizmoPlugin::LightmapGIGizmoPlugin() {
 	gizmo_color.a = 0.1;
 	create_material("lightmap_lines", gizmo_color);
 
-	Ref<StandardMaterial3D> mat = memnew(StandardMaterial3D);
-	mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
+	Ref<Material3D> mat = memnew(Material3D);
+	mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
 	// Fade out probes when camera gets too close to them.
-	mat->set_distance_fade(StandardMaterial3D::DISTANCE_FADE_PIXEL_DITHER);
+	mat->set_distance_fade(Material3D::DISTANCE_FADE_PIXEL_DITHER);
 	mat->set_distance_fade_min_distance(probe_size * 0.5);
 	mat->set_distance_fade_max_distance(probe_size * 1.5);
-	mat->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-	mat->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, false);
-	mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+	mat->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+	mat->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, false);
+	mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 
 	add_material("lightmap_probe_material", mat);
 

@@ -1052,12 +1052,12 @@ Ref<MultiMesh> Voxelizer::create_debug_multimesh() {
 	}
 
 	{
-		Ref<StandardMaterial3D> fsm;
+		Ref<Material3D> fsm;
 		fsm.instantiate();
-		fsm->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-		fsm->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-		fsm->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		fsm->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		fsm->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+		fsm->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+		fsm->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		fsm->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 		fsm->set_albedo(Color(1, 1, 1, 1));
 
 		mesh->surface_set_material(0, fsm);

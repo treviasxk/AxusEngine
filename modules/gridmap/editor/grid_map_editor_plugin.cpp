@@ -1881,35 +1881,35 @@ GridMapEditor::GridMapEditor() {
 
 		cursor_inner_mat.instantiate();
 		cursor_inner_mat->set_albedo(Color(default_color, 0.2));
-		cursor_inner_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		cursor_inner_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
-		cursor_inner_mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+		cursor_inner_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		cursor_inner_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
+		cursor_inner_mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 
 		cursor_outer_mat.instantiate();
 		cursor_outer_mat->set_albedo(Color(default_color, 0.8));
 		cursor_outer_mat->set_on_top_of_alpha();
-		cursor_outer_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		cursor_outer_mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-		cursor_outer_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		cursor_outer_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		cursor_outer_mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+		cursor_outer_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 
 		inner_mat.instantiate();
 		inner_mat->set_albedo(Color(default_color, 0.2));
-		inner_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		inner_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
-		inner_mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+		inner_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		inner_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
+		inner_mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 
 		outer_mat.instantiate();
 		outer_mat->set_albedo(Color(default_color, 0.8));
 		outer_mat->set_on_top_of_alpha();
-		outer_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		outer_mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-		outer_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		outer_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		outer_mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+		outer_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 
 		selection_floor_mat.instantiate();
 		selection_floor_mat->set_albedo(Color(0.80, 0.80, 1.0, 1));
 		selection_floor_mat->set_on_top_of_alpha();
-		selection_floor_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		selection_floor_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		selection_floor_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		selection_floor_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 
 		d[RSE::ARRAY_VERTEX] = triangles;
 		RenderingServer::get_singleton()->mesh_add_surface_from_arrays(cursor_mesh, RSE::PRIMITIVE_TRIANGLES, d);
@@ -1946,11 +1946,11 @@ GridMapEditor::GridMapEditor() {
 	_set_selection(false);
 
 	indicator_mat.instantiate();
-	indicator_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	indicator_mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-	indicator_mat->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-	indicator_mat->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-	indicator_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+	indicator_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	indicator_mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+	indicator_mat->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+	indicator_mat->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+	indicator_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 	indicator_mat->set_albedo(EDITOR_GET("editors/3d_gizmos/gizmo_colors/gridmap_grid"));
 }
 

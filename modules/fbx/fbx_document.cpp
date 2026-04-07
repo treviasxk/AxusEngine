@@ -882,10 +882,10 @@ Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 						mat = mat3d;
 
 					} else {
-						Ref<StandardMaterial3D> mat3d;
+						Ref<Material3D> mat3d;
 						mat3d.instantiate();
 						if (has_vertex_color) {
-							mat3d->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+							mat3d->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
 						}
 						mat = mat3d;
 					}
@@ -1138,7 +1138,7 @@ Error FBXDocument::_parse_materials(Ref<FBXState> p_state) {
 	for (GLTFMaterialIndex material_i = 0; material_i < static_cast<GLTFMaterialIndex>(fbx_scene->materials.count); material_i++) {
 		const ufbx_material *fbx_material = fbx_scene->materials[material_i];
 
-		Ref<StandardMaterial3D> material;
+		Ref<Material3D> material;
 		material.instantiate();
 		if (fbx_material->name.length > 0) {
 			material->set_name(_as_string(fbx_material->name));

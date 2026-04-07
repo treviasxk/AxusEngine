@@ -43,7 +43,7 @@ void SpringArm3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		Vector3(0, 0, 1.0) * spring_arm->get_length()
 	};
 
-	Ref<StandardMaterial3D> material = get_material("shape_material", p_gizmo);
+	Ref<Material3D> material = get_material("shape_material", p_gizmo);
 
 	p_gizmo->add_lines(lines, material);
 	p_gizmo->add_collision_segments(lines);

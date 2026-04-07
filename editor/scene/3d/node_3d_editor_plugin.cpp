@@ -5497,7 +5497,7 @@ void Node3DEditorViewport::_create_preview_node(const Vector<String> &files) con
 		if (audio.is_valid()) {
 			Sprite3D *sprite = memnew(Sprite3D);
 			sprite->set_texture(get_editor_theme_icon(SNAME("Gizmo3DSamplePlayer")));
-			sprite->set_billboard_mode(StandardMaterial3D::BILLBOARD_ENABLED);
+			sprite->set_billboard_mode(Material3D::BILLBOARD_ENABLED);
 			sprite->set_pixel_size(0.005);
 			preview_node->add_child(sprite);
 			add_preview = true;
@@ -5921,7 +5921,7 @@ bool Node3DEditorViewport::can_drop_data_fw(const Point2 &p_point, const Variant
 				is_other_valid = true;
 				instantiate_type |= MESH;
 			} else if (!is_other_valid && tex.is_valid()) {
-				Ref<StandardMaterial3D> new_mat;
+				Ref<Material3D> new_mat;
 				new_mat.instantiate();
 				new_mat->set_texture(BaseMaterial3D::TEXTURE_ALBEDO, tex);
 
@@ -7436,33 +7436,33 @@ void Node3DEditor::_generate_selection_boxes() {
 	const Color selection_box_color = EDITOR_GET("editors/3d/selection_box_color");
 	const Color active_selection_box_color = EDITOR_GET("editors/3d/active_selection_box_color");
 
-	selection_box_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	selection_box_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+	selection_box_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	selection_box_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 	selection_box_mat->set_albedo(selection_box_color);
-	selection_box_mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+	selection_box_mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 	st->set_material(selection_box_mat);
 	selection_box = st->commit();
 
-	selection_box_mat_xray->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	selection_box_mat_xray->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
-	selection_box_mat_xray->set_flag(StandardMaterial3D::FLAG_DISABLE_DEPTH_TEST, true);
+	selection_box_mat_xray->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	selection_box_mat_xray->set_flag(Material3D::FLAG_DISABLE_FOG, true);
+	selection_box_mat_xray->set_flag(Material3D::FLAG_DISABLE_DEPTH_TEST, true);
 	selection_box_mat_xray->set_albedo(selection_box_color * Color(1, 1, 1, 0.15));
-	selection_box_mat_xray->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+	selection_box_mat_xray->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 	st_xray->set_material(selection_box_mat_xray);
 	selection_box_xray = st_xray->commit();
 
-	active_selection_box_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	active_selection_box_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+	active_selection_box_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	active_selection_box_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 	active_selection_box_mat->set_albedo(active_selection_box_color);
-	active_selection_box_mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+	active_selection_box_mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 	active_st->set_material(active_selection_box_mat);
 	active_selection_box = active_st->commit();
 
-	active_selection_box_mat_xray->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	active_selection_box_mat_xray->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
-	active_selection_box_mat_xray->set_flag(StandardMaterial3D::FLAG_DISABLE_DEPTH_TEST, true);
+	active_selection_box_mat_xray->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	active_selection_box_mat_xray->set_flag(Material3D::FLAG_DISABLE_FOG, true);
+	active_selection_box_mat_xray->set_flag(Material3D::FLAG_DISABLE_DEPTH_TEST, true);
 	active_selection_box_mat_xray->set_albedo(active_selection_box_color * Color(1, 1, 1, 0.15));
-	active_selection_box_mat_xray->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+	active_selection_box_mat_xray->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 	active_st_xray->set_material(active_selection_box_mat_xray);
 	active_selection_box_xray = active_st_xray->commit();
 }
@@ -8387,16 +8387,16 @@ void fragment() {
 
 			const Color albedo = col.from_hsv(col.get_h(), col.get_s() * 0.25, 1.0, 1);
 
-			Ref<StandardMaterial3D> mat;
-			Ref<StandardMaterial3D> mat_hl;
+			Ref<Material3D> mat;
+			Ref<Material3D> mat_hl;
 
 			if (i < 3) {
 				// Only create standard materials for X, Y, Z axes (move/scale gizmos).
 				mat.instantiate();
-				mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-				mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+				mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+				mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 				mat->set_on_top_of_alpha();
-				mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+				mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 				mat->set_albedo(col);
 				gizmo_color[i] = mat;
 
@@ -8481,19 +8481,19 @@ void fragment() {
 					surftool->add_vertex(points[2]);
 					surftool->add_vertex(points[3]);
 
-					Ref<StandardMaterial3D> plane_mat;
+					Ref<Material3D> plane_mat;
 					plane_mat.instantiate();
-					plane_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-					plane_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+					plane_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+					plane_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 					plane_mat->set_on_top_of_alpha();
-					plane_mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-					plane_mat->set_cull_mode(StandardMaterial3D::CULL_DISABLED);
+					plane_mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+					plane_mat->set_cull_mode(Material3D::CULL_DISABLED);
 					plane_mat->set_albedo(col);
 					plane_gizmo_color[i] = plane_mat; // Needed, so we can draw planes from both sides.
 					surftool->set_material(plane_mat);
 					surftool->commit(move_plane_gizmo[i]);
 
-					Ref<StandardMaterial3D> plane_mat_hl = plane_mat->duplicate();
+					Ref<Material3D> plane_mat_hl = plane_mat->duplicate();
 					plane_mat_hl->set_albedo(albedo);
 					plane_gizmo_color_hl[i] = plane_mat_hl; // Needed, so we can draw planes from both sides.
 				}
@@ -8704,19 +8704,19 @@ void fragment() {
 					surftool->add_vertex(points[2]);
 					surftool->add_vertex(points[3]);
 
-					Ref<StandardMaterial3D> plane_mat;
+					Ref<Material3D> plane_mat;
 					plane_mat.instantiate();
-					plane_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-					plane_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+					plane_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+					plane_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 					plane_mat->set_on_top_of_alpha();
-					plane_mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-					plane_mat->set_cull_mode(StandardMaterial3D::CULL_DISABLED);
+					plane_mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+					plane_mat->set_cull_mode(Material3D::CULL_DISABLED);
 					plane_mat->set_albedo(col);
 					plane_gizmo_color[i] = plane_mat; // needed, so we can draw planes from both sides.
 					surftool->set_material(plane_mat);
 					surftool->commit(scale_plane_gizmo[i]);
 
-					Ref<StandardMaterial3D> plane_mat_hl = plane_mat->duplicate();
+					Ref<Material3D> plane_mat_hl = plane_mat->duplicate();
 					plane_mat_hl->set_albedo(col.from_hsv(col.get_h(), col.get_s() * 0.25, 1.0, 1));
 					plane_gizmo_color_hl[i] = plane_mat_hl; // needed, so we can draw planes from both sides.
 				}
@@ -8783,12 +8783,12 @@ void fragment() {
 		}
 
 		trackball_sphere_material.instantiate();
-		trackball_sphere_material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		trackball_sphere_material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
-		trackball_sphere_material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-		trackball_sphere_material->set_cull_mode(StandardMaterial3D::CULL_DISABLED);
+		trackball_sphere_material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		trackball_sphere_material->set_flag(Material3D::FLAG_DISABLE_FOG, true);
+		trackball_sphere_material->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+		trackball_sphere_material->set_cull_mode(Material3D::CULL_DISABLED);
 		trackball_sphere_material->set_albedo(Color(1.0, 1.0, 1.0, 0.0));
-		trackball_sphere_material->set_flag(StandardMaterial3D::FLAG_DISABLE_DEPTH_TEST, true);
+		trackball_sphere_material->set_flag(Material3D::FLAG_DISABLE_DEPTH_TEST, true);
 
 		trackball_sphere_material_hl = trackball_sphere_material->duplicate();
 		trackball_sphere_material_hl->set_albedo(Color(1.0, 1.0, 1.0, TRACKBALL_HIGHLIGHT_ALPHA));

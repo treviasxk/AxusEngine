@@ -1743,7 +1743,7 @@ void GridMap::_update_octant_navigation_debug_edge_connections_mesh(const Octant
 		return;
 	}
 
-	Ref<StandardMaterial3D> edge_connections_material = NavigationServer3D::get_singleton()->get_debug_navigation_edge_connections_material();
+	Ref<Material3D> edge_connections_material = NavigationServer3D::get_singleton()->get_debug_navigation_edge_connections_material();
 
 	Array mesh_array;
 	mesh_array.resize(Mesh::ARRAY_MAX);

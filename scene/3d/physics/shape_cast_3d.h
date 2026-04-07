@@ -119,7 +119,7 @@ public:
 	const Vector<Vector3> &get_debug_shape_vertices() const;
 	const Vector<Vector3> &get_debug_line_vertices() const;
 
-	Ref<StandardMaterial3D> get_debug_material();
+	Ref<Material3D> get_debug_material();
 
 	Array get_collision_result() const;
 	int get_collision_count() const;

@@ -63,12 +63,12 @@ void GeometryInstance3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			lines.push_back(b);
 		}
 
-		Ref<StandardMaterial3D> mat = memnew(StandardMaterial3D);
-		mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		Ref<Material3D> mat = memnew(Material3D);
+		mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 		const Color selection_box_color = EDITOR_GET("editors/3d_gizmos/gizmo_colors/aabb");
 		mat->set_albedo(selection_box_color);
-		mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+		mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 		p_gizmo->add_lines(lines, mat);
 	}
 }

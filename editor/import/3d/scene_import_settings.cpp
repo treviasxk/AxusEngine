@@ -251,7 +251,7 @@ void SceneImportSettingsDialog::_fill_material(Tree *p_tree, const Ref<Material>
 		material_data.settings["use_external/fallback_path"] = path;
 	}
 
-	Ref<Texture2D> icon = get_editor_theme_icon(SNAME("StandardMaterial3D"));
+	Ref<Texture2D> icon = get_editor_theme_icon(SNAME("Material3D"));
 
 	TreeItem *item = p_tree->create_item(p_parent);
 	if (p_material->get_name().is_empty()) {
@@ -1471,7 +1471,7 @@ void SceneImportSettingsDialog::_save_dir_callback(const String &p_path) {
 				String name = md.material_node->get_text(0);
 
 				item->set_cell_mode(0, TreeItem::CELL_MODE_CHECK);
-				item->set_icon(0, get_editor_theme_icon(SNAME("StandardMaterial3D")));
+				item->set_icon(0, get_editor_theme_icon(SNAME("Material3D")));
 				item->set_text(0, name);
 
 				if (md.has_import_id) {
@@ -1880,10 +1880,10 @@ SceneImportSettingsDialog::SceneImportSettingsDialog() {
 	camera->add_child(light2);
 
 	{
-		Ref<StandardMaterial3D> selection_mat;
+		Ref<Material3D> selection_mat;
 		selection_mat.instantiate();
-		selection_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		selection_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		selection_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		selection_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 		selection_mat->set_albedo(Color(1, 0.8, 1.0));
 
 		Ref<SurfaceTool> st;
@@ -1924,8 +1924,8 @@ SceneImportSettingsDialog::SceneImportSettingsDialog() {
 
 	{
 		collider_mat.instantiate();
-		collider_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		collider_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		collider_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		collider_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 		collider_mat->set_albedo(Color(0.5, 0.5, 1.0));
 	}
 

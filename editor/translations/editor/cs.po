@@ -17737,10 +17737,10 @@ msgid "Nothing is visible because no mesh has been assigned."
 msgstr "Nic není zobrazeno, protože nebyla přiřazena žádná síť."
 
 msgid ""
-"CPUParticles3D animation requires the usage of a StandardMaterial3D whose "
+"CPUParticles3D animation requires the usage of a Material3D whose "
 "Billboard Mode is set to \"Particle Billboard\"."
 msgstr ""
-"Animace CPUParticles3D vyžaduje použití StandardMaterial3D, jehož režim "
+"Animace CPUParticles3D vyžaduje použití Material3D, jehož režim "
 "Billboard je nastaven na \"Částicový billboard\"."
 
 msgid ""

@@ -284,7 +284,7 @@ class Skeleton3DGizmoPlugin : public EditorNode3DGizmoPlugin {
 	GDCLASS(Skeleton3DGizmoPlugin, EditorNode3DGizmoPlugin);
 
 	struct SelectionMaterials {
-		Ref<StandardMaterial3D> unselected_mat;
+		Ref<Material3D> unselected_mat;
 		Ref<ShaderMaterial> selected_mat;
 	};
 	static SelectionMaterials selection_materials;

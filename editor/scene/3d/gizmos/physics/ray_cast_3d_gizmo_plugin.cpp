@@ -58,7 +58,7 @@ void RayCast3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	p_gizmo->clear();
 
-	const Ref<StandardMaterial3D> material = raycast->is_enabled() ? raycast->get_debug_material() : get_material("shape_material_disabled");
+	const Ref<Material3D> material = raycast->is_enabled() ? raycast->get_debug_material() : get_material("shape_material_disabled");
 
 	p_gizmo->add_lines(raycast->get_debug_line_vertices(), material);
 

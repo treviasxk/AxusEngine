@@ -688,17 +688,17 @@ void OpenXRCompositionLayer::_reset_fallback_material() {
 			fallback->set_surface_override_material(0, material);
 		}
 	} else if (layer_viewport) {
-		Ref<StandardMaterial3D> material = fallback->get_surface_override_material(0);
+		Ref<Material3D> material = fallback->get_surface_override_material(0);
 		if (material.is_null()) {
 			material.instantiate();
-			material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
+			material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
 			material->set_local_to_scene(true);
 			fallback->set_surface_override_material(0, material);
 		}
 
-		material->set_flag(StandardMaterial3D::FLAG_DISABLE_DEPTH_TEST, !enable_hole_punch);
-		material->set_transparency(get_alpha_blend() ? StandardMaterial3D::TRANSPARENCY_ALPHA : StandardMaterial3D::TRANSPARENCY_DISABLED);
-		material->set_texture(StandardMaterial3D::TEXTURE_ALBEDO, layer_viewport->get_texture());
+		material->set_flag(Material3D::FLAG_DISABLE_DEPTH_TEST, !enable_hole_punch);
+		material->set_transparency(get_alpha_blend() ? Material3D::TRANSPARENCY_ALPHA : Material3D::TRANSPARENCY_DISABLED);
+		material->set_texture(Material3D::TEXTURE_ALBEDO, layer_viewport->get_texture());
 	} else {
 		fallback->set_surface_override_material(0, Ref<Material>());
 	}

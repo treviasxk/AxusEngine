@@ -623,7 +623,7 @@ void NavigationObstacle3D::_update_fake_agent_radius_debug() {
 
 	rs->mesh_add_surface_from_arrays(fake_agent_radius_debug_mesh_rid, RSE::PRIMITIVE_TRIANGLES, face_mesh_array);
 
-	Ref<StandardMaterial3D> face_material = ns3d->get_debug_navigation_avoidance_obstacles_radius_material();
+	Ref<Material3D> face_material = ns3d->get_debug_navigation_avoidance_obstacles_radius_material();
 	rs->instance_set_surface_override_material(fake_agent_radius_debug_instance_rid, 0, face_material->get_rid());
 
 	if (is_inside_tree()) {
@@ -699,7 +699,7 @@ void NavigationObstacle3D::_update_static_obstacle_debug() {
 
 	rs->mesh_add_surface_from_arrays(static_obstacle_debug_mesh_rid, RSE::PRIMITIVE_LINES, edge_mesh_array);
 
-	Ref<StandardMaterial3D> edge_material;
+	Ref<Material3D> edge_material;
 
 	if (are_vertices_valid()) {
 		edge_material = ns3d->get_debug_navigation_avoidance_static_obstacle_pushout_edge_material();

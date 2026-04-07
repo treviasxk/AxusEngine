@@ -392,23 +392,23 @@ private:
 	bool debug_navigation_avoidance_enable_obstacles_radius = true;
 	bool debug_navigation_avoidance_enable_obstacles_static = true;
 
-	Ref<StandardMaterial3D> debug_navigation_geometry_edge_material;
-	Ref<StandardMaterial3D> debug_navigation_geometry_face_material;
-	Ref<StandardMaterial3D> debug_navigation_geometry_edge_disabled_material;
-	Ref<StandardMaterial3D> debug_navigation_geometry_face_disabled_material;
-	Ref<StandardMaterial3D> debug_navigation_edge_connections_material;
-	Ref<StandardMaterial3D> debug_navigation_link_connections_material;
-	Ref<StandardMaterial3D> debug_navigation_link_connections_disabled_material;
-	Ref<StandardMaterial3D> debug_navigation_avoidance_agents_radius_material;
-	Ref<StandardMaterial3D> debug_navigation_avoidance_obstacles_radius_material;
+	Ref<Material3D> debug_navigation_geometry_edge_material;
+	Ref<Material3D> debug_navigation_geometry_face_material;
+	Ref<Material3D> debug_navigation_geometry_edge_disabled_material;
+	Ref<Material3D> debug_navigation_geometry_face_disabled_material;
+	Ref<Material3D> debug_navigation_edge_connections_material;
+	Ref<Material3D> debug_navigation_link_connections_material;
+	Ref<Material3D> debug_navigation_link_connections_disabled_material;
+	Ref<Material3D> debug_navigation_avoidance_agents_radius_material;
+	Ref<Material3D> debug_navigation_avoidance_obstacles_radius_material;
 
-	Ref<StandardMaterial3D> debug_navigation_avoidance_static_obstacle_pushin_face_material;
-	Ref<StandardMaterial3D> debug_navigation_avoidance_static_obstacle_pushout_face_material;
-	Ref<StandardMaterial3D> debug_navigation_avoidance_static_obstacle_pushin_edge_material;
-	Ref<StandardMaterial3D> debug_navigation_avoidance_static_obstacle_pushout_edge_material;
+	Ref<Material3D> debug_navigation_avoidance_static_obstacle_pushin_face_material;
+	Ref<Material3D> debug_navigation_avoidance_static_obstacle_pushout_face_material;
+	Ref<Material3D> debug_navigation_avoidance_static_obstacle_pushin_edge_material;
+	Ref<Material3D> debug_navigation_avoidance_static_obstacle_pushout_edge_material;
 
-	Ref<StandardMaterial3D> debug_navigation_agent_path_line_material;
-	Ref<StandardMaterial3D> debug_navigation_agent_path_point_material;
+	Ref<Material3D> debug_navigation_agent_path_line_material;
+	Ref<Material3D> debug_navigation_agent_path_point_material;
 
 public:
 	void set_debug_navigation_enabled(bool p_enabled);
@@ -498,24 +498,24 @@ public:
 	void set_debug_navigation_avoidance_enable_obstacles_static(const bool p_value);
 	bool get_debug_navigation_avoidance_enable_obstacles_static() const;
 
-	Ref<StandardMaterial3D> get_debug_navigation_geometry_face_material();
-	Ref<StandardMaterial3D> get_debug_navigation_geometry_edge_material();
-	Ref<StandardMaterial3D> get_debug_navigation_geometry_face_disabled_material();
-	Ref<StandardMaterial3D> get_debug_navigation_geometry_edge_disabled_material();
-	Ref<StandardMaterial3D> get_debug_navigation_edge_connections_material();
-	Ref<StandardMaterial3D> get_debug_navigation_link_connections_material();
-	Ref<StandardMaterial3D> get_debug_navigation_link_connections_disabled_material();
+	Ref<Material3D> get_debug_navigation_geometry_face_material();
+	Ref<Material3D> get_debug_navigation_geometry_edge_material();
+	Ref<Material3D> get_debug_navigation_geometry_face_disabled_material();
+	Ref<Material3D> get_debug_navigation_geometry_edge_disabled_material();
+	Ref<Material3D> get_debug_navigation_edge_connections_material();
+	Ref<Material3D> get_debug_navigation_link_connections_material();
+	Ref<Material3D> get_debug_navigation_link_connections_disabled_material();
 
-	Ref<StandardMaterial3D> get_debug_navigation_agent_path_line_material();
-	Ref<StandardMaterial3D> get_debug_navigation_agent_path_point_material();
+	Ref<Material3D> get_debug_navigation_agent_path_line_material();
+	Ref<Material3D> get_debug_navigation_agent_path_point_material();
 
-	Ref<StandardMaterial3D> get_debug_navigation_avoidance_agents_radius_material();
-	Ref<StandardMaterial3D> get_debug_navigation_avoidance_obstacles_radius_material();
+	Ref<Material3D> get_debug_navigation_avoidance_agents_radius_material();
+	Ref<Material3D> get_debug_navigation_avoidance_obstacles_radius_material();
 
-	Ref<StandardMaterial3D> get_debug_navigation_avoidance_static_obstacle_pushin_face_material();
-	Ref<StandardMaterial3D> get_debug_navigation_avoidance_static_obstacle_pushout_face_material();
-	Ref<StandardMaterial3D> get_debug_navigation_avoidance_static_obstacle_pushin_edge_material();
-	Ref<StandardMaterial3D> get_debug_navigation_avoidance_static_obstacle_pushout_edge_material();
+	Ref<Material3D> get_debug_navigation_avoidance_static_obstacle_pushin_face_material();
+	Ref<Material3D> get_debug_navigation_avoidance_static_obstacle_pushout_face_material();
+	Ref<Material3D> get_debug_navigation_avoidance_static_obstacle_pushin_edge_material();
+	Ref<Material3D> get_debug_navigation_avoidance_static_obstacle_pushout_edge_material();
 #endif // DEBUG_ENABLED
 };
 

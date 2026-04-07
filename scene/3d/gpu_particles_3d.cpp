@@ -350,7 +350,7 @@ PackedStringArray GPUParticles3D::get_configuration_warnings() const {
 			for (int j = 0; j < draw_passes[i]->get_surface_count(); j++) {
 				anim_material_found = Object::cast_to<ShaderMaterial>(draw_passes[i]->surface_get_material(j).ptr()) != nullptr;
 				BaseMaterial3D *spat = Object::cast_to<BaseMaterial3D>(draw_passes[i]->surface_get_material(j).ptr());
-				anim_material_found = anim_material_found || (spat && spat->get_billboard_mode() == StandardMaterial3D::BILLBOARD_PARTICLES);
+				anim_material_found = anim_material_found || (spat && spat->get_billboard_mode() == Material3D::BILLBOARD_PARTICLES);
 			}
 			if (anim_material_found) {
 				break;

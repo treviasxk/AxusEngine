@@ -20357,10 +20357,10 @@ msgid "Nothing is visible because no mesh has been assigned."
 msgstr "Ничего не видно, потому что не назначена сетка."
 
 msgid ""
-"CPUParticles3D animation requires the usage of a StandardMaterial3D whose "
+"CPUParticles3D animation requires the usage of a Material3D whose "
 "Billboard Mode is set to \"Particle Billboard\"."
 msgstr ""
-"Для анимации CPUParticles3D требуется использовать StandardMaterial3D, в "
+"Для анимации CPUParticles3D требуется использовать Material3D, в "
 "котором параметр «Режим билборда» установлен в значение «Particle Billboard»."
 
 msgid ""

@@ -45,7 +45,7 @@ TEST_CASE("[SceneTree][Node] GLTF emissiveTexture without emissiveFactor uses wh
 	MeshInstance3D *mesh = Object::cast_to<MeshInstance3D>(loaded->find_child("Cube", true, true));
 	CHECK_MESSAGE(mesh != nullptr, "Mesh not found.");
 
-	Ref<StandardMaterial3D> mat = mesh->get_active_material(0);
+	Ref<Material3D> mat = mesh->get_active_material(0);
 	CHECK_MESSAGE(mat.is_valid(), "Material not found.");
 
 	// Emission should be enabled.

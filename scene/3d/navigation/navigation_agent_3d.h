@@ -37,7 +37,7 @@
 
 class ArrayMesh;
 class Node3D;
-class StandardMaterial3D;
+class Material3D;
 
 class NavigationAgent3D : public Node {
 	GDCLASS(NavigationAgent3D, Node);
@@ -115,8 +115,8 @@ class NavigationAgent3D : public Node {
 	bool debug_path_dirty = true;
 	RID debug_path_instance;
 	Ref<ArrayMesh> debug_path_mesh;
-	Ref<StandardMaterial3D> debug_agent_path_line_custom_material;
-	Ref<StandardMaterial3D> debug_agent_path_point_custom_material;
+	Ref<Material3D> debug_agent_path_line_custom_material;
+	Ref<Material3D> debug_agent_path_point_custom_material;
 #endif // DEBUG_ENABLED
 
 protected:

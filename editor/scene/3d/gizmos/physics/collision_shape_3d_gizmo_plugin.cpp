@@ -63,26 +63,26 @@ CollisionShape3DGizmoPlugin::CollisionShape3DGizmoPlugin() {
 }
 
 void CollisionShape3DGizmoPlugin::create_collision_material(const String &p_name, float p_alpha) {
-	Vector<Ref<StandardMaterial3D>> mats;
+	Vector<Ref<Material3D>> mats;
 
 	const Color collision_color(1.0, 1.0, 1.0, p_alpha);
 
 	for (int i = 0; i < 4; i++) {
 		bool instantiated = i < 2;
 
-		Ref<StandardMaterial3D> material = memnew(StandardMaterial3D);
+		Ref<Material3D> material = memnew(Material3D);
 
 		Color color = collision_color;
 		color.a *= instantiated ? 0.25 : 1.0;
 
 		material->set_albedo(color);
-		material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-		material->set_render_priority(StandardMaterial3D::RENDER_PRIORITY_MIN + 1);
-		material->set_cull_mode(StandardMaterial3D::CULL_BACK);
-		material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
-		material->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-		material->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
+		material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		material->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+		material->set_render_priority(Material3D::RENDER_PRIORITY_MIN + 1);
+		material->set_cull_mode(Material3D::CULL_BACK);
+		material->set_flag(Material3D::FLAG_DISABLE_FOG, true);
+		material->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+		material->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
 
 		mats.push_back(material);
 	}
@@ -317,9 +317,9 @@ void CollisionShape3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	bool shape_readonly = EditorNode::get_singleton()->is_resource_read_only(s);
 
-	const Ref<StandardMaterial3D> material =
+	const Ref<Material3D> material =
 			get_material(!cs->is_disabled() ? "shape_material" : "shape_material_disabled", p_gizmo);
-	const Ref<StandardMaterial3D> material_arraymesh =
+	const Ref<Material3D> material_arraymesh =
 			get_material(!cs->is_disabled() ? "shape_material_arraymesh" : "shape_material_arraymesh_disabled", p_gizmo);
 	const Ref<Material> handles_material = get_material("handles");
 

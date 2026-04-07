@@ -182,7 +182,7 @@ void Path3D::set_debug_custom_color(const Color &p_color) {
 	_update_debug_path_material();
 }
 
-Ref<StandardMaterial3D> Path3D::get_debug_material() {
+Ref<Material3D> Path3D::get_debug_material() {
 	return debug_material;
 }
 
@@ -193,14 +193,14 @@ const Color &Path3D::get_debug_custom_color() const {
 void Path3D::_update_debug_path_material() {
 	SceneTree *st = SceneTree::get_singleton();
 	if (!debug_material.is_valid()) {
-		Ref<StandardMaterial3D> material = memnew(StandardMaterial3D);
+		Ref<Material3D> material = memnew(Material3D);
 		debug_material = material;
 
-		material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-		material->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-		material->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-		material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		material->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+		material->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+		material->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+		material->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 	}
 
 	Color color = debug_custom_color;

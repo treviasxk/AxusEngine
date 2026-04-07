@@ -1929,10 +1929,10 @@ Error GLTFDocument::_parse_meshes(Ref<GLTFState> p_state) {
 					mat = mat3d;
 
 				} else {
-					Ref<StandardMaterial3D> mat3d;
+					Ref<Material3D> mat3d;
 					mat3d.instantiate();
 					if (has_vertex_color) {
-						mat3d->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+						mat3d->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
 					}
 					mat = mat3d;
 				}
@@ -2490,7 +2490,7 @@ Error GLTFDocument::_parse_textures(Ref<GLTFState> p_state) {
 	return OK;
 }
 
-GLTFTextureIndex GLTFDocument::_set_texture(Ref<GLTFState> p_state, Ref<Texture2D> p_texture, StandardMaterial3D::TextureFilter p_filter_mode, bool p_repeats) {
+GLTFTextureIndex GLTFDocument::_set_texture(Ref<GLTFState> p_state, Ref<Texture2D> p_texture, Material3D::TextureFilter p_filter_mode, bool p_repeats) {
 	ERR_FAIL_COND_V(p_texture.is_null(), -1);
 	Ref<GLTFTexture> gltf_texture;
 	gltf_texture.instantiate();
@@ -2532,7 +2532,7 @@ Ref<Texture2D> GLTFDocument::_get_texture(Ref<GLTFState> p_state, const GLTFText
 	return p_state->images[image];
 }
 
-GLTFTextureSamplerIndex GLTFDocument::_set_sampler_for_mode(Ref<GLTFState> p_state, StandardMaterial3D::TextureFilter p_filter_mode, bool p_repeats) {
+GLTFTextureSamplerIndex GLTFDocument::_set_sampler_for_mode(Ref<GLTFState> p_state, Material3D::TextureFilter p_filter_mode, bool p_repeats) {
 	for (int i = 0; i < p_state->texture_samplers.size(); ++i) {
 		if (p_state->texture_samplers[i]->get_filter_mode() == p_filter_mode) {
 			return i;
@@ -2938,7 +2938,7 @@ Error GLTFDocument::_parse_materials(Ref<GLTFState> p_state) {
 	for (GLTFMaterialIndex i = 0; i < materials.size(); i++) {
 		const Dictionary &material_dict = materials[i];
 
-		Ref<StandardMaterial3D> material;
+		Ref<Material3D> material;
 		material.instantiate();
 		if (material_dict.has("name") && !String(material_dict["name"]).is_empty()) {
 			material->set_name(material_dict["name"]);

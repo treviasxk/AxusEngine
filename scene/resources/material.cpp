@@ -677,7 +677,7 @@ void BaseMaterial3D::init_shaders() {
 	shader_names->fov_override = "fov_override";
 }
 
-HashMap<uint64_t, Ref<StandardMaterial3D>> BaseMaterial3D::materials_for_2d;
+HashMap<uint64_t, Ref<Material3D>> BaseMaterial3D::materials_for_2d;
 
 void BaseMaterial3D::finish_shaders() {
 	materials_for_2d.clear();
@@ -772,9 +772,8 @@ void BaseMaterial3D::_update_shader() {
 	}
 
 	// Add a comment to describe the shader origin (useful when converting to ShaderMaterial).
-	String code = vformat(
-			"// NOTE: Shader automatically converted from " GODOT_VERSION_NAME " " GODOT_VERSION_FULL_CONFIG "'s %s.\n\n",
-			orm ? "ORMMaterial3D" : "StandardMaterial3D");
+	String code = vformat("// NOTE: Shader automatically converted from " GODOT_VERSION_NAME " " GODOT_VERSION_FULL_CONFIG "'s %s.\n\n",
+		shader_type == SHADER_TYPE_STANDARD ? "Material3D" : shader_type == SHADER_TYPE_ORM ? "ORMMaterial3D" : "UDIMMaterial3D");
 
 	// Define shader type and render mode based on property values.
 	code += "shader_type spatial;\nrender_mode ";
@@ -1024,7 +1023,7 @@ uniform float msdf_outline_size : hint_range(0.0, 250.0, 1.0);
 	code += "uniform ivec2 albedo_texture_size;\n";
 	code += "uniform float point_size : hint_range(0.1, 128.0, 0.1);\n";
 
-	if (!orm) {
+	if (shader_type != SHADER_TYPE_ORM) {
 		code += vformat(R"(
 uniform float roughness : hint_range(0.0, 1.0);
 uniform sampler2D texture_metallic : hint_default_white, %s;
@@ -1681,7 +1680,7 @@ void fragment() {)";
 	}
 	code += "	ALBEDO = albedo.rgb * albedo_tex.rgb;\n";
 
-	if (!orm) {
+	if (shader_type != SHADER_TYPE_ORM) {
 		if (flags[FLAG_UV1_USE_TRIPLANAR]) {
 			code += R"(
 	float metallic_tex = dot(triplanar_texture(texture_metallic, uv1_power_normal, uv1_triplanar_pos), metallic_texture_channel);
@@ -1944,7 +1943,7 @@ void fragment() {)";
 		code += R"(
 	// Ambient Occlusion: Enabled
 )";
-		if (!orm) {
+		if (shader_type != SHADER_TYPE_ORM) {
 			if (flags[FLAG_AO_ON_UV2]) {
 				if (flags[FLAG_UV2_USE_TRIPLANAR]) {
 					code += "	AO = dot(triplanar_texture(texture_ambient_occlusion, uv2_power_normal, uv2_triplanar_pos), ao_texture_channel);\n";
@@ -2152,6 +2151,20 @@ void BaseMaterial3D::_material_set_param(const StringName &p_name, const Variant
 	} else {
 		pending_params[p_name] = p_value;
 	}
+}
+
+void BaseMaterial3D::set_shader_type(ShaderType p_shader_type) {
+	if (shader_type == p_shader_type) {
+		return;
+	}
+
+	shader_type = p_shader_type;
+	_queue_shader_change();
+	notify_property_list_changed();
+}
+
+BaseMaterial3D::ShaderType BaseMaterial3D::get_shader_type() const {
+	return shader_type;
 }
 
 void BaseMaterial3D::set_albedo(const Color &p_albedo) {
@@ -2580,6 +2593,10 @@ BaseMaterial3D::TextureFilter BaseMaterial3D::get_texture_filter() const {
 }
 
 void BaseMaterial3D::_validate_property(PropertyInfo &p_property) const {
+	if (p_property.name == "shader_type") {
+		//p_property.usage = PROPERTY_USAGE_NONE;
+	}
+
 	if (p_property.name == "emission_intensity" && !GLOBAL_GET_CACHED(bool, "rendering/lights_and_shadows/use_physical_light_units")) {
 		p_property.usage = PROPERTY_USAGE_NONE;
 	}
@@ -2692,7 +2709,7 @@ void BaseMaterial3D::_validate_property(PropertyInfo &p_property) const {
 		p_property.usage = PROPERTY_USAGE_NONE;
 	}
 
-	if (orm) {
+	if (shader_type == SHADER_TYPE_ORM) {
 		if (p_property.name == "shading_mode") {
 			// Vertex not supported in ORM mode, since no individual roughness.
 			p_property.hint_string = "Unshaded,Per-Pixel";
@@ -3045,7 +3062,7 @@ Ref<Material> BaseMaterial3D::get_material_for_2d(bool p_shaded, Transparency p_
 		return materials_for_2d[key];
 	}
 
-	Ref<StandardMaterial3D> material;
+	Ref<Material3D> material;
 	material.instantiate();
 
 	material->set_shading_mode(p_shaded ? SHADING_MODE_PER_PIXEL : SHADING_MODE_UNSHADED);
@@ -3175,7 +3192,7 @@ void BaseMaterial3D::_prepare_stencil_effect() {
 	Ref<BaseMaterial3D> stencil_next_pass;
 
 	if (current_next_pass.is_null() || !current_next_pass->has_meta("_stencil_owned")) {
-		stencil_next_pass = Ref<BaseMaterial3D>(memnew(StandardMaterial3D));
+		stencil_next_pass = Ref<BaseMaterial3D>(memnew(Material3D));
 		stencil_next_pass->set_meta("_stencil_owned", true);
 		stencil_next_pass->set_next_pass(current_next_pass);
 		set_next_pass(stencil_next_pass);
@@ -3358,6 +3375,9 @@ Shader::Mode BaseMaterial3D::get_shader_mode() const {
 
 void BaseMaterial3D::_bind_methods() {
 	static_assert(sizeof(MaterialKey) == 16, "MaterialKey should be 16 bytes");
+
+	ClassDB::bind_method(D_METHOD("set_shader_type", "shader_type"), &BaseMaterial3D::set_shader_type);
+	ClassDB::bind_method(D_METHOD("get_shader_type"), &BaseMaterial3D::get_shader_type);
 
 	ClassDB::bind_method(D_METHOD("set_albedo", "albedo"), &BaseMaterial3D::set_albedo);
 	ClassDB::bind_method(D_METHOD("get_albedo"), &BaseMaterial3D::get_albedo);
@@ -3589,6 +3609,8 @@ void BaseMaterial3D::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("set_stencil_effect_outline_thickness", "stencil_outline_thickness"), &BaseMaterial3D::set_stencil_effect_outline_thickness);
 	ClassDB::bind_method(D_METHOD("get_stencil_effect_outline_thickness"), &BaseMaterial3D::get_stencil_effect_outline_thickness);
+
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "shader", PROPERTY_HINT_ENUM, "Standard,ORM,UDIM"), "set_shader_type", "get_shader_type");
 
 	ADD_GROUP("Transparency", "");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "transparency", PROPERTY_HINT_ENUM, "Disabled,Alpha,Alpha Scissor,Alpha Hash,Depth Pre-Pass"), "set_transparency", "get_transparency");
@@ -3940,9 +3962,9 @@ void BaseMaterial3D::_bind_methods() {
 	BIND_ENUM_CONSTANT(STENCIL_COMPARE_GREATER_OR_EQUAL);
 }
 
-BaseMaterial3D::BaseMaterial3D(bool p_orm) :
-		element(this) {
-	orm = p_orm;
+BaseMaterial3D::BaseMaterial3D(ShaderType p_shader_type) : element(this) {
+	set_shader_type(p_shader_type);
+
 	// Initialize to the same values as the shader
 	set_albedo(Color(1.0, 1.0, 1.0, 1.0));
 	set_specular(0.5);
@@ -4038,7 +4060,7 @@ BaseMaterial3D::~BaseMaterial3D() {
 
 #ifndef DISABLE_DEPRECATED
 // Kept for compatibility from 3.x to 4.0.
-bool StandardMaterial3D::_set(const StringName &p_name, const Variant &p_value) {
+bool Material3D::_set(const StringName &p_name, const Variant &p_value) {
 	if (p_name == "flags_transparent") {
 		bool transparent = p_value;
 		if (transparent) {

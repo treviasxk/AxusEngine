@@ -451,7 +451,7 @@ void RayCast3D::set_debug_shape_custom_color(const Color &p_color) {
 	}
 }
 
-Ref<StandardMaterial3D> RayCast3D::get_debug_material() {
+Ref<Material3D> RayCast3D::get_debug_material() {
 	_update_debug_shape_material();
 	return debug_material;
 }
@@ -474,11 +474,11 @@ void RayCast3D::_create_debug_shape() {
 
 void RayCast3D::_update_debug_shape_material(bool p_check_collision) {
 	if (debug_material.is_null()) {
-		Ref<StandardMaterial3D> material = memnew(StandardMaterial3D);
+		Ref<Material3D> material = memnew(Material3D);
 		debug_material = material;
 
-		material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		material->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 		// Use double-sided rendering so that the RayCast can be seen if the camera is inside.
 		material->set_cull_mode(BaseMaterial3D::CULL_DISABLED);
 		material->set_transparency(BaseMaterial3D::TRANSPARENCY_ALPHA);
@@ -500,7 +500,7 @@ void RayCast3D::_update_debug_shape_material(bool p_check_collision) {
 		}
 	}
 
-	Ref<StandardMaterial3D> material = static_cast<Ref<StandardMaterial3D>>(debug_material);
+	Ref<Material3D> material = static_cast<Ref<Material3D>>(debug_material);
 	material->set_albedo(color);
 }
 

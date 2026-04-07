@@ -901,13 +901,13 @@ EditorNode3DGizmo::~EditorNode3DGizmo() {
 void EditorNode3DGizmoPlugin::create_material(const String &p_name, const Color &p_color, bool p_billboard, bool p_on_top, bool p_use_vertex_color) {
 	Color instantiated_color = EDITOR_GET("editors/3d_gizmos/gizmo_colors/instantiated");
 
-	Vector<Ref<StandardMaterial3D>> mats;
+	Vector<Ref<Material3D>> mats;
 
 	for (int i = 0; i < 4; i++) {
 		bool selected = i % 2 == 1;
 		bool instantiated = i < 2;
 
-		Ref<StandardMaterial3D> material = Ref<StandardMaterial3D>(memnew(StandardMaterial3D));
+		Ref<Material3D> material = Ref<Material3D>(memnew(Material3D));
 
 		Color color = instantiated ? instantiated_color : p_color;
 
@@ -916,19 +916,19 @@ void EditorNode3DGizmoPlugin::create_material(const String &p_name, const Color 
 		}
 
 		material->set_albedo(color);
-		material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-		material->set_render_priority(StandardMaterial3D::RENDER_PRIORITY_MIN + 1);
-		material->set_cull_mode(StandardMaterial3D::CULL_DISABLED);
-		material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		material->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+		material->set_render_priority(Material3D::RENDER_PRIORITY_MIN + 1);
+		material->set_cull_mode(Material3D::CULL_DISABLED);
+		material->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 
 		if (p_use_vertex_color) {
-			material->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-			material->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
+			material->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+			material->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
 		}
 
 		if (p_billboard) {
-			material->set_billboard_mode(StandardMaterial3D::BILLBOARD_ENABLED);
+			material->set_billboard_mode(Material3D::BILLBOARD_ENABLED);
 		}
 
 		if (p_on_top && selected) {
@@ -944,13 +944,13 @@ void EditorNode3DGizmoPlugin::create_material(const String &p_name, const Color 
 void EditorNode3DGizmoPlugin::create_icon_material(const String &p_name, const Ref<Texture2D> &p_texture, bool p_on_top, const Color &p_albedo) {
 	Color instantiated_color = EDITOR_GET("editors/3d_gizmos/gizmo_colors/instantiated");
 
-	Vector<Ref<StandardMaterial3D>> icons;
+	Vector<Ref<Material3D>> icons;
 
 	for (int i = 0; i < 4; i++) {
 		bool selected = i % 2 == 1;
 		bool instantiated = i < 2;
 
-		Ref<StandardMaterial3D> icon = Ref<StandardMaterial3D>(memnew(StandardMaterial3D));
+		Ref<Material3D> icon = Ref<Material3D>(memnew(Material3D));
 
 		Color color = instantiated ? instantiated_color : p_albedo;
 
@@ -962,16 +962,16 @@ void EditorNode3DGizmoPlugin::create_icon_material(const String &p_name, const R
 
 		icon->set_albedo(color);
 
-		icon->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		icon->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-		icon->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-		icon->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
-		icon->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA_SCISSOR);
+		icon->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		icon->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+		icon->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+		icon->set_flag(Material3D::FLAG_DISABLE_FOG, true);
+		icon->set_transparency(Material3D::TRANSPARENCY_ALPHA_SCISSOR);
 		icon->set_alpha_scissor_threshold(0.1);
-		icon->set_texture(StandardMaterial3D::TEXTURE_ALBEDO, p_texture);
-		icon->set_flag(StandardMaterial3D::FLAG_FIXED_SIZE, true);
-		icon->set_billboard_mode(StandardMaterial3D::BILLBOARD_ENABLED);
-		icon->set_render_priority(StandardMaterial3D::RENDER_PRIORITY_MIN);
+		icon->set_texture(Material3D::TEXTURE_ALBEDO, p_texture);
+		icon->set_flag(Material3D::FLAG_FIXED_SIZE, true);
+		icon->set_billboard_mode(Material3D::BILLBOARD_ENABLED);
+		icon->set_render_priority(Material3D::RENDER_PRIORITY_MIN);
 
 		if (p_on_top && selected) {
 			icon->set_on_top_of_alpha();
@@ -984,36 +984,36 @@ void EditorNode3DGizmoPlugin::create_icon_material(const String &p_name, const R
 }
 
 void EditorNode3DGizmoPlugin::create_handle_material(const String &p_name, bool p_billboard, const Ref<Texture2D> &p_icon) {
-	Ref<StandardMaterial3D> handle_material = Ref<StandardMaterial3D>(memnew(StandardMaterial3D));
+	Ref<Material3D> handle_material = Ref<Material3D>(memnew(Material3D));
 
-	handle_material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	handle_material->set_flag(StandardMaterial3D::FLAG_USE_POINT_SIZE, true);
+	handle_material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	handle_material->set_flag(Material3D::FLAG_USE_POINT_SIZE, true);
 	Ref<Texture2D> handle_t = p_icon.is_valid() ? p_icon : EditorNode::get_singleton()->get_editor_theme()->get_icon(SNAME("Editor3DHandle"), EditorStringName(EditorIcons));
 	handle_material->set_point_size(handle_t->get_width());
-	handle_material->set_texture(StandardMaterial3D::TEXTURE_ALBEDO, handle_t);
+	handle_material->set_texture(Material3D::TEXTURE_ALBEDO, handle_t);
 	handle_material->set_albedo(Color(1, 1, 1));
-	handle_material->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-	handle_material->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-	handle_material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+	handle_material->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+	handle_material->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+	handle_material->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 	handle_material->set_on_top_of_alpha();
 	if (p_billboard) {
-		handle_material->set_billboard_mode(StandardMaterial3D::BILLBOARD_ENABLED);
+		handle_material->set_billboard_mode(Material3D::BILLBOARD_ENABLED);
 		handle_material->set_on_top_of_alpha();
 	}
-	handle_material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+	handle_material->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 
-	materials[p_name] = Vector<Ref<StandardMaterial3D>>();
+	materials[p_name] = Vector<Ref<Material3D>>();
 	materials[p_name].push_back(handle_material);
 }
 
-void EditorNode3DGizmoPlugin::add_material(const String &p_name, Ref<StandardMaterial3D> p_material) {
-	materials[p_name] = Vector<Ref<StandardMaterial3D>>();
+void EditorNode3DGizmoPlugin::add_material(const String &p_name, Ref<Material3D> p_material) {
+	materials[p_name] = Vector<Ref<Material3D>>();
 	materials[p_name].push_back(p_material);
 }
 
-Ref<StandardMaterial3D> EditorNode3DGizmoPlugin::get_material(const String &p_name, const Ref<EditorNode3DGizmo> &p_gizmo) {
-	ERR_FAIL_COND_V(!materials.has(p_name), Ref<StandardMaterial3D>());
-	ERR_FAIL_COND_V(materials[p_name].is_empty(), Ref<StandardMaterial3D>());
+Ref<Material3D> EditorNode3DGizmoPlugin::get_material(const String &p_name, const Ref<EditorNode3DGizmo> &p_gizmo) {
+	ERR_FAIL_COND_V(!materials.has(p_name), Ref<Material3D>());
+	ERR_FAIL_COND_V(materials[p_name].is_empty(), Ref<Material3D>());
 
 	if (p_gizmo.is_null() || materials[p_name].size() == 1) {
 		return materials[p_name][0];
@@ -1021,13 +1021,13 @@ Ref<StandardMaterial3D> EditorNode3DGizmoPlugin::get_material(const String &p_na
 
 	int index = (p_gizmo->is_selected() ? 1 : 0) + (p_gizmo->is_editable() ? 2 : 0);
 
-	Ref<StandardMaterial3D> mat = materials[p_name][index];
+	Ref<Material3D> mat = materials[p_name][index];
 
-	bool on_top_mat = mat->get_flag(StandardMaterial3D::FLAG_DISABLE_DEPTH_TEST);
+	bool on_top_mat = mat->get_flag(Material3D::FLAG_DISABLE_DEPTH_TEST);
 
 	if (!on_top_mat && current_state == ON_TOP && p_gizmo->is_selected()) {
 		mat = mat->duplicate();
-		mat->set_flag(StandardMaterial3D::FLAG_DISABLE_DEPTH_TEST, true);
+		mat->set_flag(Material3D::FLAG_DISABLE_DEPTH_TEST, true);
 	}
 
 	return mat;

@@ -18358,7 +18358,7 @@ msgid "Nothing is visible because no mesh has been assigned."
 msgstr "கண்ணி ஒதுக்கப்படாததால் எதுவும் தெரியவில்லை."
 
 msgid ""
-"CPUParticles3D animation requires the usage of a StandardMaterial3D whose "
+"CPUParticles3D animation requires the usage of a Material3D whose "
 "Billboard Mode is set to \"Particle Billboard\"."
 msgstr ""
 "Cpuparticles3d அனிமேசனுக்கு ஒரு ச்டாண்டர்ட் மெட்டீரியல் 3 டி பயன்பாடு தேவைப்படுகிறது, "

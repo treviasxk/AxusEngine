@@ -50,7 +50,7 @@ namespace TestGltf {
 TEST_CASE("[SceneTree][Node] GLTF test mesh and material meta export and import") {
 	init("gltf_mesh_material_extras");
 	// Setup scene.
-	Ref<StandardMaterial3D> original_material = memnew(StandardMaterial3D);
+	Ref<Material3D> original_material = memnew(Material3D);
 	original_material->set_albedo(Color(1.0, .0, .0));
 	original_material->set_name("material");
 	Dictionary material_dict;

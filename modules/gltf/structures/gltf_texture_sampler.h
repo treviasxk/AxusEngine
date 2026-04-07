@@ -84,8 +84,8 @@ public:
 		wrap_s = (WrapMode)wrap_mode;
 	}
 
-	StandardMaterial3D::TextureFilter get_filter_mode() const {
-		using TextureFilter = StandardMaterial3D::TextureFilter;
+	Material3D::TextureFilter get_filter_mode() const {
+		using TextureFilter = Material3D::TextureFilter;
 
 		switch (min_filter) {
 			case NEAREST:
@@ -102,8 +102,8 @@ public:
 		}
 	}
 
-	void set_filter_mode(StandardMaterial3D::TextureFilter mode) {
-		using TextureFilter = StandardMaterial3D::TextureFilter;
+	void set_filter_mode(Material3D::TextureFilter mode) {
+		using TextureFilter = Material3D::TextureFilter;
 
 		switch (mode) {
 			case TextureFilter::TEXTURE_FILTER_NEAREST:

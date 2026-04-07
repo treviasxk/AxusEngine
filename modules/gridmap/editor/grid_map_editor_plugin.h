@@ -148,12 +148,12 @@ class GridMapEditor : public EditorDock {
 	Color default_color;
 	Color erase_color;
 	Color pick_color;
-	Ref<StandardMaterial3D> indicator_mat;
-	Ref<StandardMaterial3D> cursor_inner_mat;
-	Ref<StandardMaterial3D> cursor_outer_mat;
-	Ref<StandardMaterial3D> inner_mat;
-	Ref<StandardMaterial3D> outer_mat;
-	Ref<StandardMaterial3D> selection_floor_mat;
+	Ref<Material3D> indicator_mat;
+	Ref<Material3D> cursor_inner_mat;
+	Ref<Material3D> cursor_outer_mat;
+	Ref<Material3D> inner_mat;
+	Ref<Material3D> outer_mat;
+	Ref<Material3D> selection_floor_mat;
 
 	bool updating = false;
 

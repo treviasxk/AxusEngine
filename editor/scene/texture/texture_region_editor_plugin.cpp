@@ -1038,25 +1038,25 @@ void TextureRegionEditor::_edit_region() {
 	if (node_sprite_2d) {
 		filter = node_sprite_2d->get_texture_filter_in_tree();
 	} else if (node_sprite_3d) {
-		StandardMaterial3D::TextureFilter filter_3d = node_sprite_3d->get_texture_filter();
+		Material3D::TextureFilter filter_3d = node_sprite_3d->get_texture_filter();
 
 		switch (filter_3d) {
-			case StandardMaterial3D::TEXTURE_FILTER_NEAREST:
+			case Material3D::TEXTURE_FILTER_NEAREST:
 				filter = CanvasItem::TEXTURE_FILTER_NEAREST;
 				break;
-			case StandardMaterial3D::TEXTURE_FILTER_LINEAR:
+			case Material3D::TEXTURE_FILTER_LINEAR:
 				filter = CanvasItem::TEXTURE_FILTER_LINEAR;
 				break;
-			case StandardMaterial3D::TEXTURE_FILTER_NEAREST_WITH_MIPMAPS:
+			case Material3D::TEXTURE_FILTER_NEAREST_WITH_MIPMAPS:
 				filter = CanvasItem::TEXTURE_FILTER_NEAREST_WITH_MIPMAPS;
 				break;
-			case StandardMaterial3D::TEXTURE_FILTER_LINEAR_WITH_MIPMAPS:
+			case Material3D::TEXTURE_FILTER_LINEAR_WITH_MIPMAPS:
 				filter = CanvasItem::TEXTURE_FILTER_LINEAR_WITH_MIPMAPS;
 				break;
-			case StandardMaterial3D::TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC:
+			case Material3D::TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC:
 				filter = CanvasItem::TEXTURE_FILTER_NEAREST_WITH_MIPMAPS_ANISOTROPIC;
 				break;
-			case StandardMaterial3D::TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC:
+			case Material3D::TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC:
 				filter = CanvasItem::TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC;
 				break;
 			default:

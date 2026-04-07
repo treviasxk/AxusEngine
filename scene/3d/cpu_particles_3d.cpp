@@ -225,21 +225,21 @@ PackedStringArray CPUParticles3D::get_configuration_warnings() const {
 		mesh_found = true;
 		for (int j = 0; j < get_mesh()->get_surface_count(); j++) {
 			anim_material_found = Object::cast_to<ShaderMaterial>(get_mesh()->surface_get_material(j).ptr()) != nullptr;
-			StandardMaterial3D *spat = Object::cast_to<StandardMaterial3D>(get_mesh()->surface_get_material(j).ptr());
-			anim_material_found = anim_material_found || (spat && spat->get_billboard_mode() == StandardMaterial3D::BILLBOARD_PARTICLES);
+			Material3D *spat = Object::cast_to<Material3D>(get_mesh()->surface_get_material(j).ptr());
+			anim_material_found = anim_material_found || (spat && spat->get_billboard_mode() == Material3D::BILLBOARD_PARTICLES);
 		}
 	}
 
 	anim_material_found = anim_material_found || Object::cast_to<ShaderMaterial>(get_material_override().ptr()) != nullptr;
-	StandardMaterial3D *spat = Object::cast_to<StandardMaterial3D>(get_material_override().ptr());
-	anim_material_found = anim_material_found || (spat && spat->get_billboard_mode() == StandardMaterial3D::BILLBOARD_PARTICLES);
+	Material3D *spat = Object::cast_to<Material3D>(get_material_override().ptr());
+	anim_material_found = anim_material_found || (spat && spat->get_billboard_mode() == Material3D::BILLBOARD_PARTICLES);
 
 	if (!mesh_found) {
 		warnings.push_back(RTR("Nothing is visible because no mesh has been assigned."));
 	}
 
 	if (!anim_material_found && (get_param_max(PARAM_ANIM_SPEED) != 0.0 || get_param_max(PARAM_ANIM_OFFSET) != 0.0 || get_param_curve(PARAM_ANIM_SPEED).is_valid() || get_param_curve(PARAM_ANIM_OFFSET).is_valid())) {
-		warnings.push_back(RTR("CPUParticles3D animation requires the usage of a StandardMaterial3D whose Billboard Mode is set to \"Particle Billboard\"."));
+		warnings.push_back(RTR("CPUParticles3D animation requires the usage of a Material3D whose Billboard Mode is set to \"Particle Billboard\"."));
 	}
 
 	return warnings;

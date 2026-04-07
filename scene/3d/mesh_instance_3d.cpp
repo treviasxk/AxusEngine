@@ -485,13 +485,13 @@ MeshInstance3D *MeshInstance3D::create_debug_tangents_node() {
 	}
 
 	if (lines.size()) {
-		Ref<StandardMaterial3D> sm;
+		Ref<Material3D> sm;
 		sm.instantiate();
 
-		sm->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-		sm->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-		sm->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-		sm->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+		sm->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+		sm->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+		sm->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+		sm->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 
 		Ref<ArrayMesh> am;
 		am.instantiate();

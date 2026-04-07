@@ -510,8 +510,8 @@ bool OccluderInstance3D::get_bake_mask_value(int p_layer_number) const {
 }
 
 bool OccluderInstance3D::_bake_material_check(Ref<Material> p_material) {
-	StandardMaterial3D *standard_mat = Object::cast_to<StandardMaterial3D>(p_material.ptr());
-	if (standard_mat && standard_mat->get_transparency() != StandardMaterial3D::TRANSPARENCY_DISABLED) {
+	Material3D *standard_mat = Object::cast_to<Material3D>(p_material.ptr());
+	if (standard_mat && standard_mat->get_transparency() != Material3D::TRANSPARENCY_DISABLED) {
 		return false;
 	}
 	return true;

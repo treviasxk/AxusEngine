@@ -224,20 +224,20 @@ void RuntimeNodeSelect::_setup(const Dictionary &p_settings) {
 		st_xray->add_vertex(b);
 	}
 
-	Ref<StandardMaterial3D> mat = memnew(StandardMaterial3D);
-	mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+	Ref<Material3D> mat = memnew(Material3D);
+	mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 	mat->set_albedo(sbox_color);
-	mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+	mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 	st->set_material(mat);
 	sbox_mesh = st->commit();
 
-	Ref<StandardMaterial3D> mat_xray = memnew(StandardMaterial3D);
-	mat_xray->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	mat_xray->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
-	mat_xray->set_flag(StandardMaterial3D::FLAG_DISABLE_DEPTH_TEST, true);
+	Ref<Material3D> mat_xray = memnew(Material3D);
+	mat_xray->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	mat_xray->set_flag(Material3D::FLAG_DISABLE_FOG, true);
+	mat_xray->set_flag(Material3D::FLAG_DISABLE_DEPTH_TEST, true);
 	mat_xray->set_albedo(sbox_color * Color(1, 1, 1, 0.15));
-	mat_xray->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+	mat_xray->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 	st_xray->set_material(mat_xray);
 	sbox_mesh_xray = st_xray->commit();
 #endif // _3D_DISABLED

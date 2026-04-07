@@ -336,7 +336,7 @@ Error ColladaImport::_create_material(const String &p_target) {
 	ERR_FAIL_COND_V(!collada.state.effect_map.has(src_mat.instance_effect), ERR_INVALID_PARAMETER);
 	Collada::Effect &effect = collada.state.effect_map[src_mat.instance_effect];
 
-	Ref<StandardMaterial3D> material = memnew(StandardMaterial3D);
+	Ref<Material3D> material = memnew(Material3D);
 
 	String base_name;
 	if (!src_mat.name.is_empty()) {
@@ -367,9 +367,9 @@ Error ColladaImport::_create_material(const String &p_target) {
 			}
 			Ref<Texture2D> texture = ResourceLoader::load(texfile, "Texture2D");
 			if (texture.is_valid()) {
-				material->set_texture(StandardMaterial3D::TEXTURE_ALBEDO, texture);
+				material->set_texture(Material3D::TEXTURE_ALBEDO, texture);
 				material->set_albedo(Color(1, 1, 1, 1));
-				//material->set_parameter(StandardMaterial3D::PARAM_DIFFUSE,Color(1,1,1,1));
+				//material->set_parameter(Material3D::PARAM_DIFFUSE,Color(1,1,1,1));
 			} else {
 				missing_textures.push_back(texfile.get_file());
 			}
@@ -389,11 +389,11 @@ Error ColladaImport::_create_material(const String &p_target) {
 
 			Ref<Texture2D> texture = ResourceLoader::load(texfile, "Texture2D");
 			if (texture.is_valid()) {
-				material->set_texture(StandardMaterial3D::TEXTURE_METALLIC, texture);
+				material->set_texture(Material3D::TEXTURE_METALLIC, texture);
 				material->set_specular(1.0);
 
-				//material->set_texture(StandardMaterial3D::PARAM_SPECULAR,texture);
-				//material->set_parameter(StandardMaterial3D::PARAM_SPECULAR,Color(1,1,1,1));
+				//material->set_texture(Material3D::PARAM_SPECULAR,texture);
+				//material->set_parameter(Material3D::PARAM_SPECULAR,Color(1,1,1,1));
 			} else {
 				missing_textures.push_back(texfile.get_file());
 			}
@@ -414,18 +414,18 @@ Error ColladaImport::_create_material(const String &p_target) {
 
 			Ref<Texture2D> texture = ResourceLoader::load(texfile, "Texture2D");
 			if (texture.is_valid()) {
-				material->set_feature(StandardMaterial3D::FEATURE_EMISSION, true);
-				material->set_texture(StandardMaterial3D::TEXTURE_EMISSION, texture);
+				material->set_feature(Material3D::FEATURE_EMISSION, true);
+				material->set_texture(Material3D::TEXTURE_EMISSION, texture);
 				material->set_emission(Color(1, 1, 1, 1));
 
-				//material->set_parameter(StandardMaterial3D::PARAM_EMISSION,Color(1,1,1,1));
+				//material->set_parameter(Material3D::PARAM_EMISSION,Color(1,1,1,1));
 			} else {
 				missing_textures.push_back(texfile.get_file());
 			}
 		}
 	} else {
 		if (effect.emission.color != Color()) {
-			material->set_feature(StandardMaterial3D::FEATURE_EMISSION, true);
+			material->set_feature(Material3D::FEATURE_EMISSION, true);
 			material->set_emission(effect.emission.color);
 		}
 	}
@@ -441,11 +441,11 @@ Error ColladaImport::_create_material(const String &p_target) {
 
 			Ref<Texture2D> texture = ResourceLoader::load(texfile, "Texture2D");
 			if (texture.is_valid()) {
-				material->set_feature(StandardMaterial3D::FEATURE_NORMAL_MAPPING, true);
-				material->set_texture(StandardMaterial3D::TEXTURE_NORMAL, texture);
+				material->set_feature(Material3D::FEATURE_NORMAL_MAPPING, true);
+				material->set_texture(Material3D::TEXTURE_NORMAL, texture);
 				//material->set_emission(Color(1,1,1,1));
 
-				//material->set_texture(StandardMaterial3D::PARAM_NORMAL,texture);
+				//material->set_texture(Material3D::PARAM_NORMAL,texture);
 			} else {
 				//missing_textures.push_back(texfile.get_file());
 			}
@@ -456,10 +456,10 @@ Error ColladaImport::_create_material(const String &p_target) {
 	material->set_roughness(roughness);
 
 	if (effect.double_sided) {
-		material->set_cull_mode(StandardMaterial3D::CULL_DISABLED);
+		material->set_cull_mode(Material3D::CULL_DISABLED);
 	}
 	if (effect.unshaded) {
-		material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
+		material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
 	}
 
 	material_cache[p_target] = material;
@@ -898,7 +898,7 @@ Error ColladaImport::_create_mesh_surfaces(bool p_optimize, Ref<ImporterMesh> &p
 		/*****************/
 
 		{
-			Ref<StandardMaterial3D> material;
+			Ref<Material3D> material;
 
 			{
 				if (p_material_map.has(p.material)) {

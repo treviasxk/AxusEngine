@@ -58,7 +58,7 @@ void ShapeCast3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	p_gizmo->clear();
 
-	const Ref<StandardMaterial3D> material = shapecast->is_enabled() ? shapecast->get_debug_material() : get_material("shape_material_disabled");
+	const Ref<Material3D> material = shapecast->is_enabled() ? shapecast->get_debug_material() : get_material("shape_material_disabled");
 
 	p_gizmo->add_lines(shapecast->get_debug_line_vertices(), material);
 

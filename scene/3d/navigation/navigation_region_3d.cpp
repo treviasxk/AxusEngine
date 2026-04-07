@@ -594,7 +594,7 @@ void NavigationRegion3D::_update_debug_mesh() {
 		}
 	}
 
-	Ref<StandardMaterial3D> face_material = NavigationServer3D::get_singleton()->get_debug_navigation_geometry_face_material();
+	Ref<Material3D> face_material = NavigationServer3D::get_singleton()->get_debug_navigation_geometry_face_material();
 
 	Array face_mesh_array;
 	face_mesh_array.resize(Mesh::ARRAY_MAX);
@@ -606,7 +606,7 @@ void NavigationRegion3D::_update_debug_mesh() {
 	debug_mesh->surface_set_material(0, face_material);
 
 	if (enabled_edge_lines) {
-		Ref<StandardMaterial3D> line_material = NavigationServer3D::get_singleton()->get_debug_navigation_geometry_edge_material();
+		Ref<Material3D> line_material = NavigationServer3D::get_singleton()->get_debug_navigation_geometry_edge_material();
 
 		Array line_mesh_array;
 		line_mesh_array.resize(Mesh::ARRAY_MAX);
@@ -724,7 +724,7 @@ void NavigationRegion3D::_update_debug_edge_connections_mesh() {
 		return;
 	}
 
-	Ref<StandardMaterial3D> edge_connections_material = NavigationServer3D::get_singleton()->get_debug_navigation_edge_connections_material();
+	Ref<Material3D> edge_connections_material = NavigationServer3D::get_singleton()->get_debug_navigation_edge_connections_material();
 
 	Array mesh_array;
 	mesh_array.resize(Mesh::ARRAY_MAX);

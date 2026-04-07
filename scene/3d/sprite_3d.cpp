@@ -255,13 +255,13 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 	}
 
 	switch (get_billboard_mode()) {
-		case StandardMaterial3D::BILLBOARD_ENABLED: {
+		case Material3D::BILLBOARD_ENABLED: {
 			real_t size_new = MAX(Math::abs(final_rect.position.x) * px_size, (final_rect.position.x + final_rect.size.x) * px_size);
 			size_new = MAX(size_new, MAX(Math::abs(final_rect.position.y) * px_size, (final_rect.position.y + final_rect.size.y) * px_size));
 			aabb_new.position = Vector3(-size_new, -size_new, -size_new);
 			aabb_new.size = Vector3(size_new * 2.0, size_new * 2.0, size_new * 2.0);
 		} break;
-		case StandardMaterial3D::BILLBOARD_FIXED_Y: {
+		case Material3D::BILLBOARD_FIXED_Y: {
 			real_t size_new = MAX(Math::abs(final_rect.position.x) * px_size, (final_rect.position.x + final_rect.size.x) * px_size);
 			if (ax == Vector3::AXIS_Y) {
 				size_new = MAX(size_new, MAX(Math::abs(final_rect.position.y) * px_size, (final_rect.position.y + final_rect.size.y) * px_size));
@@ -300,7 +300,7 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 	}
 
 	RID shader_rid;
-	StandardMaterial3D::get_material_for_2d(get_draw_flag(FLAG_SHADED), mat_transparency, get_draw_flag(FLAG_DOUBLE_SIDED), get_billboard_mode() == StandardMaterial3D::BILLBOARD_ENABLED, get_billboard_mode() == StandardMaterial3D::BILLBOARD_FIXED_Y, false, get_draw_flag(FLAG_DISABLE_DEPTH_TEST), get_draw_flag(FLAG_FIXED_SIZE), get_texture_filter(), alpha_antialiasing_mode, texture_repeat, &shader_rid);
+	Material3D::get_material_for_2d(get_draw_flag(FLAG_SHADED), mat_transparency, get_draw_flag(FLAG_DOUBLE_SIDED), get_billboard_mode() == Material3D::BILLBOARD_ENABLED, get_billboard_mode() == Material3D::BILLBOARD_FIXED_Y, false, get_draw_flag(FLAG_DISABLE_DEPTH_TEST), get_draw_flag(FLAG_FIXED_SIZE), get_texture_filter(), alpha_antialiasing_mode, texture_repeat, &shader_rid);
 
 	if (last_shader != shader_rid) {
 		RS::get_singleton()->material_set_shader(get_material(), shader_rid);
@@ -598,7 +598,7 @@ float SpriteBase3D::get_alpha_antialiasing_edge() const {
 	return alpha_antialiasing_edge;
 }
 
-void SpriteBase3D::set_billboard_mode(StandardMaterial3D::BillboardMode p_mode) {
+void SpriteBase3D::set_billboard_mode(Material3D::BillboardMode p_mode) {
 	ERR_FAIL_INDEX(p_mode, 3); // Cannot use BILLBOARD_PARTICLES.
 
 	if (billboard_mode == p_mode) {
@@ -609,11 +609,11 @@ void SpriteBase3D::set_billboard_mode(StandardMaterial3D::BillboardMode p_mode) 
 	_queue_redraw();
 }
 
-StandardMaterial3D::BillboardMode SpriteBase3D::get_billboard_mode() const {
+Material3D::BillboardMode SpriteBase3D::get_billboard_mode() const {
 	return billboard_mode;
 }
 
-void SpriteBase3D::set_texture_filter(StandardMaterial3D::TextureFilter p_filter) {
+void SpriteBase3D::set_texture_filter(Material3D::TextureFilter p_filter) {
 	if (texture_filter == p_filter) {
 		return;
 	}
@@ -622,7 +622,7 @@ void SpriteBase3D::set_texture_filter(StandardMaterial3D::TextureFilter p_filter
 	_queue_redraw();
 }
 
-StandardMaterial3D::TextureFilter SpriteBase3D::get_texture_filter() const {
+Material3D::TextureFilter SpriteBase3D::get_texture_filter() const {
 	return texture_filter;
 }
 
@@ -719,7 +719,7 @@ SpriteBase3D::SpriteBase3D() {
 	}
 
 	material = RenderingServer::get_singleton()->material_create();
-	// Set defaults for material, names need to match up those in StandardMaterial3D.
+	// Set defaults for material, names need to match up those in Material3D.
 	RS::get_singleton()->material_set_param(material, "albedo", Color(1, 1, 1, 1));
 	RS::get_singleton()->material_set_param(material, "specular", 0.5);
 	RS::get_singleton()->material_set_param(material, "metallic", 0.0);

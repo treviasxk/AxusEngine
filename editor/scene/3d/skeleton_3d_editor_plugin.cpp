@@ -1594,11 +1594,11 @@ Skeleton3DGizmoPlugin::SelectionMaterials Skeleton3DGizmoPlugin::selection_mater
 
 Skeleton3DGizmoPlugin::Skeleton3DGizmoPlugin() {
 	selection_materials.unselected_mat.instantiate();
-	selection_materials.unselected_mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	selection_materials.unselected_mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-	selection_materials.unselected_mat->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-	selection_materials.unselected_mat->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-	selection_materials.unselected_mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+	selection_materials.unselected_mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	selection_materials.unselected_mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+	selection_materials.unselected_mat->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+	selection_materials.unselected_mat->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+	selection_materials.unselected_mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 
 	selection_materials.selected_mat.instantiate();
 	Ref<Shader> selected_sh = Ref<Shader>(memnew(Shader));

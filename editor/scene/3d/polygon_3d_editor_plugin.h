@@ -38,7 +38,7 @@ class CanvasItemEditor;
 class ImmediateMesh;
 class MenuButton;
 class MeshInstance3D;
-class StandardMaterial3D;
+class Material3D;
 
 class Polygon3DEditor : public HBoxContainer {
 	GDCLASS(Polygon3DEditor, HBoxContainer);
@@ -54,8 +54,8 @@ class Polygon3DEditor : public HBoxContainer {
 	Button *button_create = nullptr;
 	Button *button_edit = nullptr;
 
-	Ref<StandardMaterial3D> line_material;
-	Ref<StandardMaterial3D> handle_material;
+	Ref<Material3D> line_material;
+	Ref<Material3D> handle_material;
 
 	Panel *panel = nullptr;
 	Node3D *node = nullptr;

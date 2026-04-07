@@ -1024,12 +1024,12 @@ Ref<Material> SceneTree::get_debug_paths_material() {
 		return debug_paths_material;
 	}
 
-	Ref<StandardMaterial3D> _debug_material = Ref<StandardMaterial3D>(memnew(StandardMaterial3D));
-	_debug_material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	_debug_material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-	_debug_material->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-	_debug_material->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-	_debug_material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+	Ref<Material3D> _debug_material = Ref<Material3D>(memnew(Material3D));
+	_debug_material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	_debug_material->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+	_debug_material->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+	_debug_material->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+	_debug_material->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 	_debug_material->set_albedo(get_debug_paths_color());
 
 	debug_paths_material = _debug_material;
@@ -1044,14 +1044,14 @@ Ref<Material> SceneTree::get_debug_collision_material() {
 		return collision_material;
 	}
 
-	Ref<StandardMaterial3D> material = Ref<StandardMaterial3D>(memnew(StandardMaterial3D));
-	material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-	material->set_render_priority(StandardMaterial3D::RENDER_PRIORITY_MIN + 1);
-	material->set_cull_mode(StandardMaterial3D::CULL_BACK);
-	material->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-	material->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-	material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+	Ref<Material3D> material = Ref<Material3D>(memnew(Material3D));
+	material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	material->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+	material->set_render_priority(Material3D::RENDER_PRIORITY_MIN + 1);
+	material->set_cull_mode(Material3D::CULL_BACK);
+	material->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+	material->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+	material->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 
 	collision_material = material;
 
@@ -1067,12 +1067,12 @@ Ref<ArrayMesh> SceneTree::get_debug_contact_mesh() {
 
 	debug_contact_mesh.instantiate();
 
-	Ref<StandardMaterial3D> mat = Ref<StandardMaterial3D>(memnew(StandardMaterial3D));
-	mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-	mat->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-	mat->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-	mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+	Ref<Material3D> mat = Ref<Material3D>(memnew(Material3D));
+	mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+	mat->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+	mat->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+	mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
 	mat->set_albedo(get_debug_collision_contact_color());
 
 	Vector3 diamond[6] = {

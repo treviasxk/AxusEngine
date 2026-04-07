@@ -39,11 +39,11 @@
 #include "scene/resources/mesh.h"
 #include "scene/resources/surface_tool.h"
 
-static Error _parse_material_library(const String &p_path, HashMap<String, Ref<StandardMaterial3D>> &material_map, List<String> *r_missing_deps) {
+static Error _parse_material_library(const String &p_path, HashMap<String, Ref<Material3D>> &material_map, List<String> *r_missing_deps) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_CANT_OPEN, vformat("Couldn't open MTL file '%s', it may not exist or not be readable.", p_path));
 
-	Ref<StandardMaterial3D> current;
+	Ref<Material3D> current;
 	String current_name;
 	String base_path = p_path.get_base_dir();
 	while (true) {
@@ -96,7 +96,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 			c.a = d;
 			current->set_albedo(c);
 			if (c.a < 0.99) {
-				current->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+				current->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 			}
 		} else if (l.begins_with("Tr ")) {
 			// Transparency (1.0 is completely transparent, 0.0 is fully opaque).
@@ -108,7 +108,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 			c.a = 1.0 - d;
 			current->set_albedo(c);
 			if (c.a < 0.99) {
-				current->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+				current->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 			}
 
 		} else if (l.begins_with("map_Ka ")) {
@@ -130,7 +130,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 			Ref<Texture2D> texture = ResourceLoader::load(path);
 
 			if (texture.is_valid()) {
-				current->set_texture(StandardMaterial3D::TEXTURE_ALBEDO, texture);
+				current->set_texture(Material3D::TEXTURE_ALBEDO, texture);
 			} else if (r_missing_deps) {
 				r_missing_deps->push_back(path);
 			}
@@ -150,7 +150,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 			Ref<Texture2D> texture = ResourceLoader::load(path);
 
 			if (texture.is_valid()) {
-				current->set_texture(StandardMaterial3D::TEXTURE_METALLIC, texture);
+				current->set_texture(Material3D::TEXTURE_METALLIC, texture);
 			} else if (r_missing_deps) {
 				r_missing_deps->push_back(path);
 			}
@@ -170,7 +170,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 			Ref<Texture2D> texture = ResourceLoader::load(path);
 
 			if (texture.is_valid()) {
-				current->set_texture(StandardMaterial3D::TEXTURE_ROUGHNESS, texture);
+				current->set_texture(Material3D::TEXTURE_ROUGHNESS, texture);
 			} else if (r_missing_deps) {
 				r_missing_deps->push_back(path);
 			}
@@ -204,8 +204,8 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 			Ref<Texture2D> texture = ResourceLoader::load(path);
 
 			if (texture.is_valid()) {
-				current->set_feature(StandardMaterial3D::FEATURE_NORMAL_MAPPING, true);
-				current->set_texture(StandardMaterial3D::TEXTURE_NORMAL, texture);
+				current->set_feature(Material3D::FEATURE_NORMAL_MAPPING, true);
+				current->set_texture(Material3D::TEXTURE_NORMAL, texture);
 				current->set_normal_scale(bm);
 			} else if (r_missing_deps) {
 				r_missing_deps->push_back(path);
@@ -250,7 +250,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 	const String default_name = "Mesh";
 	String name = default_name;
 
-	HashMap<String, HashMap<String, Ref<StandardMaterial3D>>> material_map;
+	HashMap<String, HashMap<String, Ref<Material3D>>> material_map;
 
 	Ref<SurfaceTool> surf_tool = memnew(SurfaceTool);
 	surf_tool->begin(Mesh::PRIMITIVE_TRIANGLES);
@@ -435,11 +435,11 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 
 				print_verbose("OBJ: Current material library " + current_material_library + " has " + itos(material_map.has(current_material_library)));
 				print_verbose("OBJ: Current material " + current_material + " has " + itos(material_map.has(current_material_library) && material_map[current_material_library].has(current_material)));
-				Ref<StandardMaterial3D> material;
+				Ref<Material3D> material;
 				if (material_map.has(current_material_library) && material_map[current_material_library].has(current_material)) {
 					material = material_map[current_material_library][current_material];
 					if (!colors.is_empty()) {
-						material->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
+						material->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
 					}
 					surf_tool->set_material(material);
 				}
@@ -512,7 +512,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 
 			current_material_library = l.replace("mtllib", "").strip_edges();
 			if (!material_map.has(current_material_library)) {
-				HashMap<String, Ref<StandardMaterial3D>> lib;
+				HashMap<String, Ref<Material3D>> lib;
 				String lib_path = current_material_library;
 				if (lib_path.is_relative_path()) {
 					lib_path = p_path.get_base_dir().path_join(current_material_library);

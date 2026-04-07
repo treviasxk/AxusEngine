@@ -114,7 +114,7 @@ class SceneImportSettingsDialog : public ConfirmationDialog {
 	bool previous_rest_as_reset = false;
 	MeshInstance3D *bones_mesh_preview = nullptr;
 
-	Ref<StandardMaterial3D> collider_mat;
+	Ref<Material3D> collider_mat;
 
 	float cam_rot_x = 0.0f;
 	float cam_rot_y = 0.0f;

@@ -1594,7 +1594,7 @@ const char *RenamesMap3To4::class_renames[][2] = {
 	{ "SoftBody", "SoftBody3D" },
 	{ "Spatial", "Node3D" },
 	{ "SpatialGizmo", "Node3DGizmo" },
-	{ "SpatialMaterial", "StandardMaterial3D" },
+	{ "SpatialMaterial", "Material3D" },
 	{ "SphereShape", "SphereShape3D" },
 	{ "SpotLight", "SpotLight3D" },
 	{ "SpringArm", "SpringArm3D" },

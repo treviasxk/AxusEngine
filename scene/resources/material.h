@@ -135,7 +135,7 @@ public:
 	~ShaderMaterial();
 };
 
-class StandardMaterial3D;
+class Material3D;
 
 class BaseMaterial3D : public Material {
 	GDCLASS(BaseMaterial3D, Material);
@@ -181,6 +181,13 @@ public:
 		DETAIL_UV_1,
 		DETAIL_UV_2,
 		DETAIL_UV_MAX
+	};
+
+	enum ShaderType {
+		SHADER_TYPE_STANDARD,
+		SHADER_TYPE_ORM,
+		SHADER_TYPE_UDIM,
+		SHADER_TYPE_MAX,
 	};
 
 	enum Transparency {
@@ -357,6 +364,7 @@ public:
 private:
 	struct MaterialKey {
 		// enum values
+		uint64_t shader_type : Math::get_num_bits(SHADER_TYPE_MAX - 1);
 		uint64_t texture_filter : Math::get_num_bits(TEXTURE_FILTER_MAX - 1);
 		uint64_t detail_uv : Math::get_num_bits(DETAIL_UV_MAX - 1);
 		uint64_t transparency : Math::get_num_bits(TRANSPARENCY_MAX - 1);
@@ -385,7 +393,6 @@ private:
 		uint64_t deep_parallax : 1;
 		uint64_t grow : 1;
 		uint64_t proximity_fade : 1;
-		uint64_t orm : 1;
 
 		// flag bitfield
 		uint32_t feature_mask;
@@ -420,6 +427,7 @@ private:
 	_FORCE_INLINE_ MaterialKey _compute_key() const {
 		MaterialKey mk;
 
+		mk.shader_type = shader_type;
 		mk.detail_uv = detail_uv;
 		mk.blend_mode = blend_mode;
 		mk.depth_draw_mode = depth_draw_mode;
@@ -439,7 +447,6 @@ private:
 		mk.distance_fade = distance_fade;
 		mk.emission_op = emission_op;
 		mk.alpha_antialiasing_mode = alpha_antialiasing_mode;
-		mk.orm = orm;
 
 		mk.stencil_mode = stencil_mode;
 		mk.stencil_flags = stencil_flags;
@@ -531,7 +538,7 @@ private:
 	void _check_material_rid();
 	void _material_set_param(const StringName &p_name, const Variant &p_value);
 
-	bool orm;
+	ShaderType shader_type = SHADER_TYPE_STANDARD;
 	RID shader_rid;
 	HashMap<StringName, Variant> pending_params;
 
@@ -633,7 +640,7 @@ private:
 	void _prepare_stencil_effect();
 	Ref<BaseMaterial3D> _get_stencil_next_pass() const;
 
-	static HashMap<uint64_t, Ref<StandardMaterial3D>> materials_for_2d; //used by Sprite3D, Label3D and other stuff
+	static HashMap<uint64_t, Ref<Material3D>> materials_for_2d; //used by Sprite3D, Label3D and other stuff
 
 protected:
 	static void _bind_methods();
@@ -642,6 +649,9 @@ protected:
 	virtual bool _can_use_render_priority() const override { return true; }
 
 public:
+	void set_shader_type(ShaderType p_shader_type);
+	ShaderType get_shader_type() const;
+
 	void set_albedo(const Color &p_albedo);
 	Color get_albedo() const;
 
@@ -883,10 +893,10 @@ public:
 
 	virtual Shader::Mode get_shader_mode() const override;
 
-	BaseMaterial3D(bool p_orm);
+	BaseMaterial3D(ShaderType p_shader_type);
 	virtual ~BaseMaterial3D();
 };
-
+VARIANT_ENUM_CAST(BaseMaterial3D::ShaderType)
 VARIANT_ENUM_CAST(BaseMaterial3D::TextureParam)
 VARIANT_ENUM_CAST(BaseMaterial3D::TextureFilter)
 VARIANT_ENUM_CAST(BaseMaterial3D::ShadingMode)
@@ -909,8 +919,8 @@ VARIANT_ENUM_CAST(BaseMaterial3D::StencilMode)
 VARIANT_ENUM_CAST(BaseMaterial3D::StencilFlags)
 VARIANT_ENUM_CAST(BaseMaterial3D::StencilCompare)
 
-class StandardMaterial3D : public BaseMaterial3D {
-	GDCLASS(StandardMaterial3D, BaseMaterial3D)
+class Material3D : public BaseMaterial3D {
+	GDCLASS(Material3D, BaseMaterial3D)
 protected:
 #ifndef DISABLE_DEPRECATED
 	// Kept for compatibility from 3.x to 4.0.
@@ -918,15 +928,8 @@ protected:
 #endif
 
 public:
-	StandardMaterial3D() :
-			BaseMaterial3D(false) {}
-};
-
-class ORMMaterial3D : public BaseMaterial3D {
-	GDCLASS(ORMMaterial3D, BaseMaterial3D)
-public:
-	ORMMaterial3D() :
-			BaseMaterial3D(true) {}
+	Material3D() :
+	BaseMaterial3D(SHADER_TYPE_STANDARD) {}
 };
 
 class PlaceholderMaterial : public Material {

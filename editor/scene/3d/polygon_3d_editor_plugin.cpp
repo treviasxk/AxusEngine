@@ -560,25 +560,25 @@ Polygon3DEditor::Polygon3DEditor() {
 	imgeom->set_transform(Transform3D(Basis(), Vector3(0, 0, 0.00001)));
 
 	line_material.instantiate();
-	line_material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	line_material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-	line_material->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-	line_material->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-	line_material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
-	line_material->set_flag(StandardMaterial3D::FLAG_DISABLE_DEPTH_TEST, true);
+	line_material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	line_material->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+	line_material->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+	line_material->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+	line_material->set_flag(Material3D::FLAG_DISABLE_FOG, true);
+	line_material->set_flag(Material3D::FLAG_DISABLE_DEPTH_TEST, true);
 	line_material->set_albedo(Color(1, 1, 1));
 
 	handle_material.instantiate();
-	handle_material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	handle_material->set_flag(StandardMaterial3D::FLAG_USE_POINT_SIZE, true);
-	handle_material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
-	handle_material->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-	handle_material->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-	handle_material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
-	handle_material->set_flag(StandardMaterial3D::FLAG_DISABLE_DEPTH_TEST, true);
+	handle_material->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	handle_material->set_flag(Material3D::FLAG_USE_POINT_SIZE, true);
+	handle_material->set_transparency(Material3D::TRANSPARENCY_ALPHA);
+	handle_material->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+	handle_material->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+	handle_material->set_flag(Material3D::FLAG_DISABLE_FOG, true);
+	handle_material->set_flag(Material3D::FLAG_DISABLE_DEPTH_TEST, true);
 	Ref<Texture2D> handle = EditorNode::get_singleton()->get_editor_theme()->get_icon(SNAME("Editor3DHandle"), EditorStringName(EditorIcons));
 	handle_material->set_point_size(handle->get_width());
-	handle_material->set_texture(StandardMaterial3D::TEXTURE_ALBEDO, handle);
+	handle_material->set_texture(Material3D::TEXTURE_ALBEDO, handle);
 
 	pointsm = memnew(MeshInstance3D);
 	imgeom->add_child(pointsm);

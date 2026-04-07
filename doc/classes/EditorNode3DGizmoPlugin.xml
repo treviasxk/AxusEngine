@@ -170,7 +170,7 @@
 		<method name="add_material">
 			<return type="void" />
 			<param index="0" name="name" type="String" />
-			<param index="1" name="material" type="StandardMaterial3D" />
+			<param index="1" name="material" type="Material3D" />
 			<description>
 				Adds a new material to the internal material list for the plugin. It can then be accessed with [method get_material]. Should not be overridden.
 			</description>
@@ -207,7 +207,7 @@
 			</description>
 		</method>
 		<method name="get_material">
-			<return type="StandardMaterial3D" />
+			<return type="Material3D" />
 			<param index="0" name="name" type="String" />
 			<param index="1" name="gizmo" type="EditorNode3DGizmo" default="null" />
 			<description>

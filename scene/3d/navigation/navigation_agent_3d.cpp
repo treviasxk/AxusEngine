@@ -1179,7 +1179,7 @@ void NavigationAgent3D::_update_debug_path() {
 
 	debug_path_mesh->add_surface_from_arrays(Mesh::PRIMITIVE_LINES, debug_path_lines_mesh_array);
 
-	Ref<StandardMaterial3D> debug_agent_path_line_material = NavigationServer3D::get_singleton()->get_debug_navigation_agent_path_line_material();
+	Ref<Material3D> debug_agent_path_line_material = NavigationServer3D::get_singleton()->get_debug_navigation_agent_path_line_material();
 	if (debug_use_custom) {
 		if (debug_agent_path_line_custom_material.is_null()) {
 			debug_agent_path_line_custom_material = debug_agent_path_line_material->duplicate();
@@ -1203,7 +1203,7 @@ void NavigationAgent3D::_update_debug_path() {
 
 		debug_path_mesh->add_surface_from_arrays(Mesh::PRIMITIVE_POINTS, debug_path_points_mesh_array);
 
-		Ref<StandardMaterial3D> debug_agent_path_point_material = NavigationServer3D::get_singleton()->get_debug_navigation_agent_path_point_material();
+		Ref<Material3D> debug_agent_path_point_material = NavigationServer3D::get_singleton()->get_debug_navigation_agent_path_point_material();
 		if (debug_use_custom) {
 			if (debug_agent_path_point_custom_material.is_null()) {
 				debug_agent_path_point_custom_material = debug_agent_path_point_material->duplicate();

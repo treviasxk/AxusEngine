@@ -200,10 +200,10 @@ private:
 	MeshInstance3D *ruler_line = nullptr;
 	MeshInstance3D *ruler_line_xray = nullptr;
 	Label *ruler_label = nullptr;
-	Ref<StandardMaterial3D> ruler_material;
-	Ref<StandardMaterial3D> ruler_material_xray;
-	Ref<StandardMaterial3D> ruler_triangle_material;
-	Ref<StandardMaterial3D> ruler_triangle_material_xray;
+	Ref<Material3D> ruler_material;
+	Ref<Material3D> ruler_material_xray;
+	Ref<Material3D> ruler_triangle_material;
+	Ref<Material3D> ruler_triangle_material_xray;
 	MeshInstance3D *ruler_triangle_lines = nullptr;
 	MeshInstance3D *ruler_triangle_lines_xray = nullptr;
 	Label *ruler_label_x = nullptr;
@@ -658,14 +658,14 @@ private:
 
 	Ref<ArrayMesh> move_gizmo[3], move_plane_gizmo[3], rotate_gizmo[4], scale_gizmo[3], scale_plane_gizmo[3], axis_gizmo[3];
 	Ref<ArrayMesh> trackball_sphere_gizmo;
-	Ref<StandardMaterial3D> gizmo_color[3];
-	Ref<StandardMaterial3D> plane_gizmo_color[3];
+	Ref<Material3D> gizmo_color[3];
+	Ref<Material3D> plane_gizmo_color[3];
 	Ref<ShaderMaterial> rotate_gizmo_color[4];
-	Ref<StandardMaterial3D> gizmo_color_hl[3];
-	Ref<StandardMaterial3D> plane_gizmo_color_hl[3];
+	Ref<Material3D> gizmo_color_hl[3];
+	Ref<Material3D> plane_gizmo_color_hl[3];
 	Ref<ShaderMaterial> rotate_gizmo_color_hl[4];
-	Ref<StandardMaterial3D> trackball_sphere_material;
-	Ref<StandardMaterial3D> trackball_sphere_material_hl;
+	Ref<Material3D> trackball_sphere_material;
+	Ref<Material3D> trackball_sphere_material_hl;
 
 	Ref<Node3DGizmo> current_hover_gizmo;
 	int current_hover_gizmo_handle;
@@ -682,10 +682,10 @@ private:
 	Ref<ArrayMesh> selection_box_xray;
 	Ref<ArrayMesh> selection_box;
 
-	Ref<StandardMaterial3D> selection_box_mat = memnew(StandardMaterial3D);
-	Ref<StandardMaterial3D> selection_box_mat_xray = memnew(StandardMaterial3D);
-	Ref<StandardMaterial3D> active_selection_box_mat = memnew(StandardMaterial3D);
-	Ref<StandardMaterial3D> active_selection_box_mat_xray = memnew(StandardMaterial3D);
+	Ref<Material3D> selection_box_mat = memnew(Material3D);
+	Ref<Material3D> selection_box_mat_xray = memnew(Material3D);
+	Ref<Material3D> active_selection_box_mat = memnew(Material3D);
+	Ref<Material3D> active_selection_box_mat_xray = memnew(Material3D);
 
 	RID indicators;
 	RID indicators_instance;
@@ -693,7 +693,7 @@ private:
 	RID cursor_instance;
 	Ref<ShaderMaterial> origin_mat;
 	Ref<ShaderMaterial> grid_mat[3];
-	Ref<StandardMaterial3D> cursor_material;
+	Ref<Material3D> cursor_material;
 
 	// Scene drag and drop support
 	Node3D *preview_node = nullptr;

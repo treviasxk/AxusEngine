@@ -78,12 +78,12 @@ Marker3DGizmoPlugin::Marker3DGizmoPlugin() {
 	cursor_colors.push_back(color_z.darkened(0.5));
 	cursor_colors.push_back(color_z.darkened(0.5));
 
-	Ref<StandardMaterial3D> mat = memnew(StandardMaterial3D);
-	mat->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
-	mat->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
-	mat->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
-	mat->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
-	mat->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+	Ref<Material3D> mat = memnew(Material3D);
+	mat->set_shading_mode(Material3D::SHADING_MODE_UNSHADED);
+	mat->set_flag(Material3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+	mat->set_flag(Material3D::FLAG_SRGB_VERTEX_COLOR, true);
+	mat->set_flag(Material3D::FLAG_DISABLE_FOG, true);
+	mat->set_transparency(Material3D::TRANSPARENCY_ALPHA);
 
 	Array d;
 	d.resize(RSE::ARRAY_MAX);

@@ -3269,7 +3269,7 @@ msgid "Total Primitives Drawn"
 msgstr "Primitivos Desenhados no Total"
 
 msgid "Total Draw Calls"
-msgstr "Chamadas de Desenho no Total"
+msgstr "Draw Calls no Total"
 
 msgid "Video"
 msgstr "Vídeo"

@@ -44,8 +44,8 @@
 namespace TestGltf {
 Ref<Texture2D> _check_texture(Node *p_node) {
 	MeshInstance3D *mesh_instance_3d = Object::cast_to<MeshInstance3D>(p_node->find_child("mesh_instance_3d", true, true));
-	Ref<StandardMaterial3D> material = mesh_instance_3d->get_active_material(0);
-	Ref<Texture2D> texture = material->get_texture(StandardMaterial3D::TextureParam::TEXTURE_ALBEDO);
+	Ref<Material3D> material = mesh_instance_3d->get_active_material(0);
+	Ref<Texture2D> texture = material->get_texture(Material3D::TextureParam::TEXTURE_ALBEDO);
 
 	CHECK_MESSAGE(texture->get_size().x == 2, "Texture width not correct.");
 	CHECK_MESSAGE(texture->get_size().y == 2, "Texture height not correct.");
@@ -76,9 +76,9 @@ TEST_CASE("[SceneTree][Node] Export GLTF with external texture and import") {
 
 	original_texture->set_image(image);
 
-	Ref<StandardMaterial3D> original_material;
+	Ref<Material3D> original_material;
 	original_material.instantiate();
-	original_material->set_texture(StandardMaterial3D::TextureParam::TEXTURE_ALBEDO, original_texture);
+	original_material->set_texture(Material3D::TextureParam::TEXTURE_ALBEDO, original_texture);
 	original_material->set_name("material");
 
 	Ref<PlaneMesh> original_meshdata;

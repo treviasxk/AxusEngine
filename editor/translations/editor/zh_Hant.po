@@ -18430,11 +18430,11 @@ msgid "Nothing is visible because no mesh has been assigned."
 msgstr "由於尚未指定網格，未顯示任何內容。"
 
 msgid ""
-"CPUParticles3D animation requires the usage of a StandardMaterial3D whose "
+"CPUParticles3D animation requires the usage of a Material3D whose "
 "Billboard Mode is set to \"Particle Billboard\"."
 msgstr ""
 "CPUParticles3D 動畫需要使用 Billboard 模式設為「Particle Billboard」的 "
-"StandardMaterial3D。"
+"Material3D。"
 
 msgid ""
 "The decal has no textures loaded into any of its texture properties, and will "
