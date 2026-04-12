@@ -4317,6 +4317,7 @@ void CanvasItemEditor::_update_editor_settings() {
 	move_button->set_button_icon(get_editor_theme_icon(SNAME("ToolMove")));
 	scale_button->set_button_icon(get_editor_theme_icon(SNAME("ToolScale")));
 	rotate_button->set_button_icon(get_editor_theme_icon(SNAME("ToolRotate")));
+	mode_3d_button->set_button_icon(get_editor_theme_icon(SNAME("2D")));
 	local_space_button->set_button_icon(get_editor_theme_icon(SNAME("Object")));
 	smart_snap_button->set_button_icon(get_editor_theme_icon(SNAME("Snap")));
 	grid_snap_button->set_button_icon(get_editor_theme_icon(SNAME("SnapGrid")));
@@ -4665,6 +4666,11 @@ void CanvasItemEditor::_update_oversampling() {
 
 void CanvasItemEditor::_shortcut_zoom_set(real_t p_zoom) {
 	_zoom_on_position(p_zoom * MAX(1, EDSCALE), viewport->get_local_mouse_position());
+}
+
+void CanvasItemEditor::_button_3D_mode(bool p_status) {
+	mode_3d_button->set_pressed(false);
+	EditorNode::get_singleton()->get_editor_main_screen()->select(EditorMainScreen::EDITOR_3D);
 }
 
 void CanvasItemEditor::_button_toggle_local_space(bool p_status) {
@@ -5822,6 +5828,17 @@ CanvasItemEditor::CanvasItemEditor() {
 	ruler_button->set_accessibility_name(TTRC("Ruler Mode"));
 
 	main_menu_hbox->add_child(memnew(VSeparator));
+
+
+	mode_3d_button = memnew(Button);
+	mode_3d_button->set_theme_type_variation(SceneStringName(FlatButton));
+	main_menu_hbox->add_child(mode_3d_button);
+	mode_3d_button->set_toggle_mode(true);
+	mode_3d_button->set_tooltip_text(TTRC("Toggle 3D Mode (Alt + Z)"));
+	mode_3d_button->connect(SceneStringName(toggled), callable_mp(this, &CanvasItemEditor::_button_3D_mode));
+	mode_3d_button->set_shortcut_context(this);
+	mode_3d_button->set_accessibility_name(TTRC("Toggle 3D Mode"));
+	
 
 	local_space_button = memnew(Button);
 	local_space_button->set_theme_type_variation(SceneStringName(FlatButton));

@@ -59,8 +59,8 @@ public:
 
 		Color base_color;
 		Color accent_color;
-		float contrast = 1.0;
-		float icon_saturation = 1.0;
+		float contrast = 0.0;
+		float icon_saturation = 0.0;
 
 		// Extra properties.
 
@@ -82,9 +82,9 @@ public:
 		float dragging_hover_wait_msec = 0;
 
 		// Make sure to keep those in sync with the definitions in the editor settings.
-		const float default_icon_saturation = 2.0;
+		const float default_icon_saturation = 0.0;
 		const int default_relationship_lines = RELATIONSHIP_SELECTED_ONLY;
-		const float default_contrast = 0.3;
+		const float default_contrast = 0.75;
 		const int default_corner_radius = 4;
 
 		// Generated properties.

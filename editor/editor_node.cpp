@@ -415,8 +415,6 @@ void EditorNode::shortcut_input(const Ref<InputEvent> &p_event) {
 			editor_main_screen->select(EditorMainScreen::EDITOR_2D);
 		} else if (ED_IS_SHORTCUT("editor/editor_3d", p_event)) {
 			editor_main_screen->select(EditorMainScreen::EDITOR_3D);
-		} else if (ED_IS_SHORTCUT("editor/editor_script", p_event)) {
-			editor_main_screen->select(EditorMainScreen::EDITOR_SCRIPT);
 		} else if (ED_IS_SHORTCUT("editor/editor_game", p_event)) {
 			editor_main_screen->select(EditorMainScreen::EDITOR_GAME);
 		} else if (ED_IS_SHORTCUT("editor/editor_help", p_event)) {
@@ -6795,15 +6793,15 @@ void EditorNode::_prepare_save_confirmation_popup() {
 
 void EditorNode::_toggle_distraction_free_mode() {
 	if (EDITOR_GET("interface/editor/behavior/separate_distraction_mode")) {
-		int screen = editor_main_screen->get_selected_index();
+		// int screen = editor_main_screen->get_selected_index();
 
-		if (screen == EditorMainScreen::EDITOR_SCRIPT) {
-			script_distraction_free = !script_distraction_free;
-			set_distraction_free_mode(script_distraction_free);
-		} else {
-			scene_distraction_free = !scene_distraction_free;
-			set_distraction_free_mode(scene_distraction_free);
-		}
+		// if (screen == EditorMainScreen::EDITOR_SCRIPT) {
+		// 	script_distraction_free = !script_distraction_free;
+		// 	set_distraction_free_mode(script_distraction_free);
+		// } else {
+		// 	scene_distraction_free = !scene_distraction_free;
+		// 	set_distraction_free_mode(scene_distraction_free);
+		// }
 	} else {
 		set_distraction_free_mode(distraction_free->is_pressed());
 	}
@@ -6813,12 +6811,12 @@ void EditorNode::update_distraction_free_mode() {
 	if (!EDITOR_GET("interface/editor/behavior/separate_distraction_mode")) {
 		return;
 	}
-	int screen = editor_main_screen->get_selected_index();
-	if (screen == EditorMainScreen::EDITOR_SCRIPT) {
-		set_distraction_free_mode(script_distraction_free);
-	} else {
-		set_distraction_free_mode(scene_distraction_free);
-	}
+	// int screen = editor_main_screen->get_selected_index();
+	// if (screen == EditorMainScreen::EDITOR_SCRIPT) {
+	// 	set_distraction_free_mode(script_distraction_free);
+	// } else {
+	// 	set_distraction_free_mode(scene_distraction_free);
+	// }
 }
 
 void EditorNode::set_distraction_free_mode(bool p_enter) {
@@ -7813,7 +7811,7 @@ void EditorNode::_feature_profile_changed() {
 		editor_dock_manager->set_dock_enabled(history_dock, !profile->is_feature_disabled(EditorFeatureProfile::FEATURE_HISTORY_DOCK));
 
 		editor_main_screen->set_button_enabled(EditorMainScreen::EDITOR_3D, !profile->is_feature_disabled(EditorFeatureProfile::FEATURE_3D));
-		editor_main_screen->set_button_enabled(EditorMainScreen::EDITOR_SCRIPT, !profile->is_feature_disabled(EditorFeatureProfile::FEATURE_SCRIPT));
+
 		if (!Engine::get_singleton()->is_recovery_mode_hint()) {
 			editor_main_screen->set_button_enabled(EditorMainScreen::EDITOR_GAME, !profile->is_feature_disabled(EditorFeatureProfile::FEATURE_GAME));
 		}
@@ -7826,10 +7824,12 @@ void EditorNode::_feature_profile_changed() {
 		editor_dock_manager->set_dock_enabled(GroupsDock::get_singleton(), true);
 		editor_dock_manager->set_dock_enabled(FileSystemDock::get_singleton(), true);
 		editor_dock_manager->set_dock_enabled(history_dock, true);
-		editor_main_screen->set_button_enabled(EditorMainScreen::EDITOR_3D, true);
-		editor_main_screen->set_button_enabled(EditorMainScreen::EDITOR_SCRIPT, true);
+
+		editor_main_screen->set_button_enabled(EditorMainScreen::EDITOR_2D, false);
+		editor_main_screen->set_button_enabled(EditorMainScreen::EDITOR_3D, false);
+
 		if (!Engine::get_singleton()->is_recovery_mode_hint()) {
-			editor_main_screen->set_button_enabled(EditorMainScreen::EDITOR_GAME, true);
+			editor_main_screen->set_button_enabled(EditorMainScreen::EDITOR_GAME, false);
 		}
 		if (AssetLibraryEditorPlugin::is_available()) {
 			editor_main_screen->set_button_enabled(EditorMainScreen::EDITOR_ASSETLIB, true);
@@ -8209,6 +8209,8 @@ void EditorNode::_update_main_menu_type() {
 		title_bar->add_child(menu_btn_spacer);
 		title_bar->move_child(menu_btn_spacer, left_menu_spacer ? left_menu_spacer->get_index() + 1 : 0);
 #endif
+
+
 		title_bar->add_child(main_menu_button);
 		if (menu_btn_spacer == nullptr) {
 			title_bar->move_child(main_menu_button, left_menu_spacer ? left_menu_spacer->get_index() + 1 : 0);
@@ -8232,6 +8234,15 @@ void EditorNode::_update_main_menu_type() {
 
 		title_bar->add_child(main_menu_bar);
 		title_bar->move_child(main_menu_bar, left_menu_spacer ? left_menu_spacer->get_index() + 1 : 0);
+		
+		Button *logo_button = memnew(Button);
+		logo_button->set_flat(true);
+		logo_button->set_disabled(true);
+		logo_button->set_focus_mode(Control::FOCUS_NONE);
+		logo_button->set_mouse_filter(Control::MOUSE_FILTER_IGNORE);
+		logo_button->set_button_icon(theme->get_icon(SNAME("Logo"), EditorStringName(EditorIcons)));
+		title_bar->add_child(logo_button);
+		title_bar->move_child(logo_button, 0);
 	}
 
 	// Show/hide project title.
@@ -8943,15 +8954,13 @@ EditorNode::EditorNode() {
 	// Use the Ctrl modifier so F2 can be used to rename nodes in the scene tree dock.
 	ED_SHORTCUT_AND_COMMAND("editor/editor_2d", TTRC("Open 2D Workspace"), KeyModifierMask::CTRL | Key::F1);
 	ED_SHORTCUT_AND_COMMAND("editor/editor_3d", TTRC("Open 3D Workspace"), KeyModifierMask::CTRL | Key::F2);
-	ED_SHORTCUT_AND_COMMAND("editor/editor_script", TTRC("Open Script Editor"), KeyModifierMask::CTRL | Key::F3);
-	ED_SHORTCUT_AND_COMMAND("editor/editor_game", TTRC("Open Game View"), KeyModifierMask::CTRL | Key::F4);
-	ED_SHORTCUT_AND_COMMAND("editor/editor_assetlib", TTRC("Open Asset Library"), KeyModifierMask::CTRL | Key::F5);
+	ED_SHORTCUT_AND_COMMAND("editor/editor_game", TTRC("Open Game View"), KeyModifierMask::CTRL | Key::F3);
+	ED_SHORTCUT_AND_COMMAND("editor/editor_assetlib", TTRC("Open Asset Library"), KeyModifierMask::CTRL | Key::F4);
 
 	ED_SHORTCUT_OVERRIDE("editor/editor_2d", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_1);
 	ED_SHORTCUT_OVERRIDE("editor/editor_3d", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_2);
-	ED_SHORTCUT_OVERRIDE("editor/editor_script", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_3);
-	ED_SHORTCUT_OVERRIDE("editor/editor_game", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_4);
-	ED_SHORTCUT_OVERRIDE("editor/editor_assetlib", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_5);
+	ED_SHORTCUT_OVERRIDE("editor/editor_game", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_3);
+	ED_SHORTCUT_OVERRIDE("editor/editor_assetlib", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_4);
 
 	ED_SHORTCUT_AND_COMMAND("editor/editor_next", TTRC("Open the next Editor"));
 	ED_SHORTCUT_AND_COMMAND("editor/editor_prev", TTRC("Open the previous Editor"));
@@ -9017,12 +9026,13 @@ EditorNode::EditorNode() {
 	project_title->set_visible(can_expand && menu_type == MENU_TYPE_GLOBAL);
 	left_spacer->add_child(project_title);
 
-	HBoxContainer *main_editor_button_hb = memnew(HBoxContainer);
-	main_editor_button_hb->set_mouse_filter(Control::MOUSE_FILTER_STOP);
-	main_editor_button_hb->set_name("EditorMainScreenButtons");
-	editor_main_screen->set_button_container(main_editor_button_hb);
-	title_bar->add_child(main_editor_button_hb);
-	title_bar->set_center_control(main_editor_button_hb);
+	project_run_bar = memnew(EditorRunBar);
+	project_run_bar->set_mouse_filter(Control::MOUSE_FILTER_STOP);
+	title_bar->add_child(project_run_bar);
+	project_run_bar->connect("play_pressed", callable_mp(this, &EditorNode::_project_run_started));
+	project_run_bar->connect("stop_pressed", callable_mp(this, &EditorNode::_project_run_stopped));
+	title_bar->set_center_control(project_run_bar);
+
 
 	// Spacer to center 2D / 3D / Script buttons.
 	right_spacer = memnew(Control);
@@ -9030,18 +9040,14 @@ EditorNode::EditorNode() {
 	right_spacer->set_h_size_flags(Control::SIZE_EXPAND_FILL);
 	title_bar->add_child(right_spacer);
 
-	project_run_bar = memnew(EditorRunBar);
-	project_run_bar->set_mouse_filter(Control::MOUSE_FILTER_STOP);
-	title_bar->add_child(project_run_bar);
-	project_run_bar->connect("play_pressed", callable_mp(this, &EditorNode::_project_run_started));
-	project_run_bar->connect("stop_pressed", callable_mp(this, &EditorNode::_project_run_stopped));
 
 	right_menu_hb = memnew(HBoxContainer);
 	right_menu_hb->set_mouse_filter(Control::MOUSE_FILTER_STOP);
-	title_bar->add_child(right_menu_hb);
-
+	right_menu_hb->set_name("EditorMainScreenButtons");
+	editor_main_screen->set_button_container(right_menu_hb);
+	
 	renderer = memnew(OptionButton);
-	renderer->set_visible(true);
+	renderer->set_visible(false);
 	renderer->set_flat(true);
 	renderer->set_theme_type_variation("TopBarOptionButton");
 	renderer->set_fit_to_longest_item(false);
@@ -9052,6 +9058,9 @@ EditorNode::EditorNode() {
 	renderer->set_accessibility_name(TTRC("Renderer"));
 
 	right_menu_hb->add_child(renderer);
+	
+	title_bar->add_child(right_menu_hb);
+
 
 	if (can_expand) {
 		// Add spacer to avoid other controls under the window minimize/maximize/close buttons (right side).
@@ -9334,7 +9343,6 @@ EditorNode::EditorNode() {
 
 	add_editor_plugin(memnew(CanvasItemEditorPlugin));
 	add_editor_plugin(memnew(Node3DEditorPlugin));
-	add_editor_plugin(memnew(ScriptEditorPlugin));
 
 	if (!Engine::get_singleton()->is_recovery_mode_hint()) {
 		add_editor_plugin(get_game_view_plugin());
@@ -9352,6 +9360,7 @@ EditorNode::EditorNode() {
 	}
 
 	// More visually meaningful to have this later.
+	add_editor_plugin(memnew(ScriptEditorPlugin));
 	add_editor_plugin(memnew(AnimationPlayerEditorPlugin));
 	add_editor_plugin(memnew(AnimationTrackKeyEditEditorPlugin));
 	add_editor_plugin(memnew(AnimationMarkerKeyEditEditorPlugin));

@@ -33,6 +33,7 @@
 #include "core/io/resource.h"
 #include "core/templates/self_list.h"
 #include "scene/resources/shader.h"
+#include "scene/resources/image_texture.h"
 #include "servers/rendering/rendering_server_enums.h"
 
 class Material : public Resource {
@@ -517,6 +518,7 @@ private:
 		StringName refraction_texture_channel;
 
 		StringName texture_names[TEXTURE_MAX];
+		StringName texture_array_names[TEXTURE_MAX];
 
 		StringName alpha_scissor_threshold;
 		StringName alpha_hash_scale;
@@ -636,6 +638,7 @@ private:
 	bool features[FEATURE_MAX] = {};
 
 	Ref<Texture2D> textures[TEXTURE_MAX];
+	Ref<Texture2DArray> textures_array[TEXTURE_MAX];
 
 	void _prepare_stencil_effect();
 	Ref<BaseMaterial3D> _get_stencil_next_pass() const;
@@ -771,6 +774,9 @@ public:
 
 	void set_flag(Flags p_flag, bool p_enabled);
 	bool get_flag(Flags p_flag) const;
+	
+	void set_textureArray(TextureParam p_param, const Ref<Texture2DArray> &p_texture);
+	Ref<Texture2DArray> get_textureArray(TextureParam p_param) const;
 
 	void set_texture(TextureParam p_param, const Ref<Texture2D> &p_texture);
 	Ref<Texture2D> get_texture(TextureParam p_param) const;

@@ -271,10 +271,46 @@ ImageTextureLayered::LayeredType ImageTextureLayered::get_layered_type() const {
 	return layered_type;
 }
 
+void ImageTextureLayered::set_texture(const TypedArray<Texture2D> &p_texture) {
+	texture_array = p_texture;
+
+	TypedArray<Image> images;
+
+	for (int i = 0; i < p_texture.size(); i++) {
+		Ref<Texture2D> img = p_texture[i];	
+		if(!img.is_null()){
+			Ref<Image> image = img->get_image();
+			if(!image.is_null()){
+				images.push_back(image);
+			}
+		}
+	}
+
+	if(images.size() > 0){
+		_create_from_images(images);
+	}else{
+		if (texture.is_valid()) {
+			RenderingServer::get_singleton()->free_rid(texture);
+			texture = RID();
+		}
+		format = Image::FORMAT_L8;
+		width = 0;
+		height = 0;
+		layers = 0;
+		mipmaps = false;
+	}
+
+	notify_property_list_changed();
+}
+
+TypedArray<Texture2D> ImageTextureLayered::get_texture() const {
+	return texture_array;
+}
+
 Error ImageTextureLayered::_create_from_images(const TypedArray<Image> &p_images) {
 	Vector<Ref<Image>> images;
 	for (int i = 0; i < p_images.size(); i++) {
-		Ref<Image> img = p_images[i];
+		Ref<Image> img = p_images[i];		
 		ERR_FAIL_COND_V(img.is_null(), ERR_INVALID_PARAMETER);
 		images.push_back(img);
 	}
@@ -369,13 +405,17 @@ void ImageTextureLayered::set_path(const String &p_path, bool p_take_over) {
 }
 
 void ImageTextureLayered::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("set_texture", "texture"), &ImageTextureLayered::set_texture);
+	ClassDB::bind_method(D_METHOD("get_texture"), &ImageTextureLayered::get_texture);
+
 	ClassDB::bind_method(D_METHOD("create_from_images", "images"), &ImageTextureLayered::_create_from_images);
 	ClassDB::bind_method(D_METHOD("update_layer", "image", "layer"), &ImageTextureLayered::update_layer);
 
 	ClassDB::bind_method(D_METHOD("_get_images"), &ImageTextureLayered::_get_images);
 	ClassDB::bind_method(D_METHOD("_set_images", "images"), &ImageTextureLayered::_set_images);
 
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "_images", PROPERTY_HINT_ARRAY_TYPE, "Image", PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT), "_set_images", "_get_images");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "_images", PROPERTY_HINT_ARRAY_TYPE, "Image", PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT), "_set_images", "_get_images");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "_textures", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture");
 }
 
 ImageTextureLayered::ImageTextureLayered(LayeredType p_layered_type) {

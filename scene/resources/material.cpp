@@ -40,6 +40,7 @@
 #include "core/version.h"
 #include "scene/main/scene_tree.h"
 #include "scene/resources/texture.h"
+#include "scene/resources/image_texture.h"
 #include "servers/rendering/rendering_server.h"
 
 void Material::set_next_pass(const Ref<Material> &p_pass) {
@@ -668,6 +669,26 @@ void BaseMaterial3D::init_shaders() {
 	shader_names->texture_names[TEXTURE_DETAIL_NORMAL] = "texture_detail_normal";
 	shader_names->texture_names[TEXTURE_ORM] = "texture_orm";
 
+	shader_names->texture_array_names[TEXTURE_ALBEDO] = "texture_array_albedo";
+	shader_names->texture_array_names[TEXTURE_METALLIC] = "texture_array_metallic";
+	shader_names->texture_array_names[TEXTURE_ROUGHNESS] = "texture_array_roughness";
+	shader_names->texture_array_names[TEXTURE_EMISSION] = "texture_array_emission";
+	shader_names->texture_array_names[TEXTURE_NORMAL] = "texture_array_normal";
+	shader_names->texture_array_names[TEXTURE_BENT_NORMAL] = "texture_array_bent_normal";
+	shader_names->texture_array_names[TEXTURE_RIM] = "texture_array_rim";
+	shader_names->texture_array_names[TEXTURE_CLEARCOAT] = "texture_array_clearcoat";
+	shader_names->texture_array_names[TEXTURE_FLOWMAP] = "texture_array_flowmap";
+	shader_names->texture_array_names[TEXTURE_AMBIENT_OCCLUSION] = "texture_array_ambient_occlusion";
+	shader_names->texture_array_names[TEXTURE_HEIGHTMAP] = "texture_array_heightmap";
+	shader_names->texture_array_names[TEXTURE_SUBSURFACE_SCATTERING] = "texture_array_subsurface_scattering";
+	shader_names->texture_array_names[TEXTURE_SUBSURFACE_TRANSMITTANCE] = "texture_array_subsurface_transmittance";
+	shader_names->texture_array_names[TEXTURE_BACKLIGHT] = "texture_array_backlight";
+	shader_names->texture_array_names[TEXTURE_REFRACTION] = "texture_array_refraction";
+	shader_names->texture_array_names[TEXTURE_DETAIL_MASK] = "texture_array_detail_mask";
+	shader_names->texture_array_names[TEXTURE_DETAIL_ALBEDO] = "texture_array_detail_albedo";
+	shader_names->texture_array_names[TEXTURE_DETAIL_NORMAL] = "texture_array_detail_normal";
+	shader_names->texture_array_names[TEXTURE_ORM] = "texture_array_orm";
+
 	shader_names->alpha_scissor_threshold = "alpha_scissor_threshold";
 	shader_names->alpha_hash_scale = "alpha_hash_scale";
 
@@ -966,6 +987,33 @@ void BaseMaterial3D::_update_shader() {
 		}
 
 		code += vformat(", %s;\n", stencil_reference);
+	}
+
+	if (shader_type == SHADER_TYPE_UDIM) {
+		code += R"(
+uniform vec4 Albedo_Position[10];
+uniform sampler2DArray texture_array_albedo : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_metallic : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_roughness : hint_roughness_r, filter_linear_mipmap;
+uniform sampler2DArray texture_array_emission : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_normal : hint_roughness_normal, filter_linear_mipmap;
+uniform sampler2DArray texture_array_bent_normal : hint_roughness_normal, filter_linear_mipmap;
+uniform sampler2DArray texture_array_rim : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_flowmap : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_ambient_occlusion : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_heightmap : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_subsurface_scattering : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_subsurface_transmittance : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_backlight : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_refraction : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_detail_mask : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_detail_albedo : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_detail_normal : source_color, filter_linear_mipmap;
+uniform sampler2DArray texture_array_orm : source_color, filter_linear_mipmap;
+
+
+varying flat int tile_layer;
+)";
 	}
 
 	// Generate list of uniforms.
@@ -1512,6 +1560,15 @@ vec4 triplanar_texture(sampler2D p_sampler, vec3 p_weights, vec3 p_triplanar_pos
 	code += R"(
 void fragment() {)";
 
+	if (shader_type == SHADER_TYPE_UDIM) {
+		code += R"(
+
+	vec2 local_uv = fract(UV);
+    float layer   = floor(UV.x) + floor(UV.y) * 10.0;
+)";
+	}
+
+
 	if (!flags[FLAG_UV1_USE_TRIPLANAR]) {
 		code += R"(
 	vec2 base_uv = UV;
@@ -1678,7 +1735,14 @@ void fragment() {)";
 
 )";
 	}
-	code += "	ALBEDO = albedo.rgb * albedo_tex.rgb;\n";
+
+
+	if (shader_type == SHADER_TYPE_UDIM) {
+		code += "	ALBEDO = albedo.rgb * texture(texture_array_albedo, vec3(local_uv, layer)).rgb;\n";
+	}else{
+		code += "	ALBEDO = albedo.rgb * albedo_tex.rgb;\n";
+	}
+
 
 	if (shader_type != SHADER_TYPE_ORM) {
 		if (flags[FLAG_UV1_USE_TRIPLANAR]) {
@@ -1724,13 +1788,25 @@ void fragment() {)";
 				break; // Internal value, skip.
 		}
 
-		if (flags[FLAG_UV1_USE_TRIPLANAR]) {
-			code += "	float roughness_tex = dot(triplanar_texture(texture_roughness, uv1_power_normal, uv1_triplanar_pos), roughness_texture_channel);\n";
-		} else {
-			code += "	float roughness_tex = dot(texture(texture_roughness, base_uv), roughness_texture_channel);\n";
+
+		if (shader_type == SHADER_TYPE_UDIM) {
+			if (flags[FLAG_UV1_USE_TRIPLANAR]) {
+				code += "	float roughness_tex = dot(triplanar_texture(texture_array_roughness, uv1_power_normal, uv1_triplanar_pos), roughness_texture_channel);\n";
+			} else {
+				code += "	float roughness_tex = dot(texture(texture_array_roughness, vec3(local_uv, layer)), roughness_texture_channel);\n";
+			}
+		}else{
+			if (flags[FLAG_UV1_USE_TRIPLANAR]) {
+				code += "	float roughness_tex = dot(triplanar_texture(texture_roughness, uv1_power_normal, uv1_triplanar_pos), roughness_texture_channel);\n";
+			} else {
+				code += "	float roughness_tex = dot(texture(texture_roughness, base_uv), roughness_texture_channel);\n";
+			}
 		}
+
 		code += R"(	ROUGHNESS = roughness_tex * roughness;
 )";
+
+
 	} else {
 		if (flags[FLAG_UV1_USE_TRIPLANAR]) {
 			code += R"(
@@ -1751,11 +1827,22 @@ void fragment() {)";
 		code += R"(
 	// Normal Map: Enabled
 )";
-		if (flags[FLAG_UV1_USE_TRIPLANAR]) {
-			code += "	NORMAL_MAP = triplanar_texture(texture_normal, uv1_power_normal, uv1_triplanar_pos).rgb;\n";
-		} else {
-			code += "	NORMAL_MAP = texture(texture_normal, base_uv).rgb;\n";
+
+
+		if (shader_type == SHADER_TYPE_UDIM) {
+			if (flags[FLAG_UV1_USE_TRIPLANAR]) {
+				code += "	NORMAL_MAP = triplanar_texture(texture_array_normal, uv1_power_normal, uv1_triplanar_pos).rgb;\n";
+			} else {
+				code += "	NORMAL_MAP = texture(texture_array_normal, vec3(local_uv, layer)).rgb;\n";
+			}
+		}else{
+			if (flags[FLAG_UV1_USE_TRIPLANAR]) {
+				code += "	NORMAL_MAP = triplanar_texture(texture_normal, uv1_power_normal, uv1_triplanar_pos).rgb;\n";
+			} else {
+				code += "	NORMAL_MAP = texture(texture_normal, base_uv).rgb;\n";
+			}
 		}
+
 		code += "	NORMAL_MAP_DEPTH = normal_scale;\n";
 	}
 
@@ -2553,6 +2640,26 @@ bool BaseMaterial3D::get_feature(Feature p_feature) const {
 	return features[p_feature];
 }
 
+void BaseMaterial3D::set_textureArray(TextureParam p_param, const Ref<Texture2DArray> &p_texture) {
+	ERR_FAIL_INDEX(p_param, TEXTURE_MAX);
+
+	textures_array[p_param] = p_texture;
+
+	Variant rid = p_texture.is_valid() ? Variant(p_texture->get_rid()) : Variant();
+	_material_set_param(shader_names->texture_array_names[p_param], rid);
+
+	if (p_texture.is_valid() && p_param == TEXTURE_ALBEDO) {
+		_material_set_param(shader_names->albedo_texture_size, Vector2i(p_texture->get_width(), p_texture->get_height()));
+	}
+
+	notify_property_list_changed();
+	_queue_shader_change();
+}
+
+Ref<Texture2DArray> BaseMaterial3D::get_textureArray(TextureParam p_param) const {
+	return textures_array[p_param];
+}
+
 void BaseMaterial3D::set_texture(TextureParam p_param, const Ref<Texture2D> &p_texture) {
 	ERR_FAIL_INDEX(p_param, TEXTURE_MAX);
 
@@ -2720,6 +2827,16 @@ void BaseMaterial3D::_validate_property(PropertyInfo &p_property) const {
 
 	} else {
 		if (p_property.name == "orm_texture") {
+			p_property.usage = PROPERTY_USAGE_NONE;
+		}
+	}
+
+	if(shader_type != SHADER_TYPE_UDIM){
+		if (p_property.name.ends_with("texture_udim")) {
+			p_property.usage = PROPERTY_USAGE_NONE;
+		}
+	}else{
+		if (p_property.name.ends_with("_texture")) {
 			p_property.usage = PROPERTY_USAGE_NONE;
 		}
 	}
@@ -3487,6 +3604,9 @@ void BaseMaterial3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_texture", "param", "texture"), &BaseMaterial3D::set_texture);
 	ClassDB::bind_method(D_METHOD("get_texture", "param"), &BaseMaterial3D::get_texture);
 
+	ClassDB::bind_method(D_METHOD("set_textureArray", "param", "texture"), &BaseMaterial3D::set_textureArray);
+	ClassDB::bind_method(D_METHOD("get_textureArray", "param"), &BaseMaterial3D::get_textureArray);
+
 	ClassDB::bind_method(D_METHOD("set_detail_blend_mode", "detail_blend_mode"), &BaseMaterial3D::set_detail_blend_mode);
 	ClassDB::bind_method(D_METHOD("get_detail_blend_mode"), &BaseMaterial3D::get_detail_blend_mode);
 
@@ -3639,21 +3759,25 @@ void BaseMaterial3D::_bind_methods() {
 	ADD_GROUP("Albedo", "albedo_");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "albedo_color"), "set_albedo", "get_albedo");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "albedo_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_ALBEDO);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "albedo_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_ALBEDO);
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "albedo_texture_force_srgb"), "set_flag", "get_flag", FLAG_ALBEDO_TEXTURE_FORCE_SRGB);
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "albedo_texture_msdf"), "set_flag", "get_flag", FLAG_ALBEDO_TEXTURE_MSDF);
 
 	ADD_GROUP("ORM", "orm_");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "orm_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_ORM);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "orm_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_ORM);
 
 	ADD_GROUP("Metallic", "metallic_");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "metallic", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_metallic", "get_metallic");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "metallic_specular", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_specular", "get_specular");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "metallic_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_METALLIC);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "metallic_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_METALLIC);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "metallic_texture_channel", PROPERTY_HINT_ENUM, "Red,Green,Blue,Alpha,Gray"), "set_metallic_texture_channel", "get_metallic_texture_channel");
 
 	ADD_GROUP("Roughness", "roughness_");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "roughness", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_roughness", "get_roughness");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "roughness_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_ROUGHNESS);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "roughness_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_ROUGHNESS);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "roughness_texture_channel", PROPERTY_HINT_ENUM, "Red,Green,Blue,Alpha,Gray"), "set_roughness_texture_channel", "get_roughness_texture_channel");
 
 	ADD_GROUP("Emission", "emission_");
@@ -3665,37 +3789,44 @@ void BaseMaterial3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "emission_operator", PROPERTY_HINT_ENUM, "Add,Multiply"), "set_emission_operator", "get_emission_operator");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "emission_on_uv2"), "set_flag", "get_flag", FLAG_EMISSION_ON_UV2);
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "emission_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_EMISSION);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "emission_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_EMISSION);
 
 	ADD_GROUP("Normal Map", "normal_");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "normal_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_feature", "get_feature", FEATURE_NORMAL_MAPPING);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "normal_scale", PROPERTY_HINT_RANGE, "-16,16,0.01"), "set_normal_scale", "get_normal_scale");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "normal_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_NORMAL);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "normal_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_NORMAL);
 
 	ADD_GROUP("Bent Normal Map", "bent_normal_");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "bent_normal_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_feature", "get_feature", FEATURE_BENT_NORMAL_MAPPING);
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "bent_normal_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_BENT_NORMAL);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "bent_normal_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_BENT_NORMAL);
 
 	ADD_GROUP("Rim", "rim_");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "rim_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_feature", "get_feature", FEATURE_RIM);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rim", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_rim", "get_rim");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rim_tint", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_rim_tint", "get_rim_tint");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "rim_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_RIM);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "rim_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_RIM);
 
 	ADD_GROUP("Clearcoat", "clearcoat_");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "clearcoat_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_feature", "get_feature", FEATURE_CLEARCOAT);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "clearcoat", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_clearcoat", "get_clearcoat");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "clearcoat_roughness", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_clearcoat_roughness", "get_clearcoat_roughness");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "clearcoat_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_CLEARCOAT);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "clearcoat_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_CLEARCOAT);
 
 	ADD_GROUP("Anisotropy", "anisotropy_");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "anisotropy_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_feature", "get_feature", FEATURE_ANISOTROPY);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "anisotropy", PROPERTY_HINT_RANGE, "-1,1,0.01"), "set_anisotropy", "get_anisotropy");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "anisotropy_flowmap", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_FLOWMAP);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "anisotropy_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_FLOWMAP);
 
 	ADD_GROUP("Ambient Occlusion", "ao_");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "ao_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_feature", "get_feature", FEATURE_AMBIENT_OCCLUSION);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ao_light_affect", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_ao_light_affect", "get_ao_light_affect");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "ao_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_AMBIENT_OCCLUSION);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "ao_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_AMBIENT_OCCLUSION);
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "ao_on_uv2"), "set_flag", "get_flag", FLAG_AO_ON_UV2);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "ao_texture_channel", PROPERTY_HINT_ENUM, "Red,Green,Blue,Alpha,Gray"), "set_ao_texture_channel", "get_ao_texture_channel");
 
@@ -3708,6 +3839,7 @@ void BaseMaterial3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "heightmap_flip_tangent"), "set_heightmap_deep_parallax_flip_tangent", "get_heightmap_deep_parallax_flip_tangent");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "heightmap_flip_binormal"), "set_heightmap_deep_parallax_flip_binormal", "get_heightmap_deep_parallax_flip_binormal");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "heightmap_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_HEIGHTMAP);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "heightmap_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_HEIGHTMAP);
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "heightmap_flip_texture"), "set_flag", "get_flag", FLAG_INVERT_HEIGHTMAP);
 
 	ADD_GROUP("Subsurf Scatter", "subsurf_scatter_");
@@ -3715,11 +3847,13 @@ void BaseMaterial3D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "subsurf_scatter_strength", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_subsurface_scattering_strength", "get_subsurface_scattering_strength");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "subsurf_scatter_skin_mode"), "set_flag", "get_flag", FLAG_SUBSURFACE_MODE_SKIN);
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "subsurf_scatter_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_SUBSURFACE_SCATTERING);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "subsurf_scatter_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_SUBSURFACE_SCATTERING);
 
 	ADD_SUBGROUP("Transmittance", "subsurf_scatter_transmittance_");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "subsurf_scatter_transmittance_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_feature", "get_feature", FEATURE_SUBSURFACE_TRANSMITTANCE);
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "subsurf_scatter_transmittance_color"), "set_transmittance_color", "get_transmittance_color");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "subsurf_scatter_transmittance_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_SUBSURFACE_TRANSMITTANCE);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "subsurf_scatter_transmittance_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_SUBSURFACE_TRANSMITTANCE);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "subsurf_scatter_transmittance_depth", PROPERTY_HINT_RANGE, "0.001,8,0.001,or_greater"), "set_transmittance_depth", "get_transmittance_depth");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "subsurf_scatter_transmittance_boost", PROPERTY_HINT_RANGE, "0.00,1.0,0.01"), "set_transmittance_boost", "get_transmittance_boost");
 
@@ -3727,11 +3861,13 @@ void BaseMaterial3D::_bind_methods() {
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "backlight_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_feature", "get_feature", FEATURE_BACKLIGHT);
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "backlight", PROPERTY_HINT_COLOR_NO_ALPHA), "set_backlight", "get_backlight");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "backlight_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_BACKLIGHT);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "backlight_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_BACKLIGHT);
 
 	ADD_GROUP("Refraction", "refraction_");
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "refraction_enabled", PROPERTY_HINT_GROUP_ENABLE), "set_feature", "get_feature", FEATURE_REFRACTION);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "refraction_scale", PROPERTY_HINT_RANGE, "-1,1,0.01"), "set_refraction", "get_refraction");
 	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "refraction_texture", PROPERTY_HINT_RESOURCE_TYPE, Texture2D::get_class_static()), "set_texture", "get_texture", TEXTURE_REFRACTION);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "refraction_texture_udim", PROPERTY_HINT_RESOURCE_TYPE, Texture2DArray::get_class_static()), "set_textureArray", "get_textureArray", TEXTURE_REFRACTION);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "refraction_texture_channel", PROPERTY_HINT_ENUM, "Red,Green,Blue,Alpha,Gray"), "set_refraction_texture_channel", "get_refraction_texture_channel");
 
 	ADD_GROUP("Detail", "detail_");

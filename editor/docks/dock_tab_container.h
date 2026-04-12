@@ -83,9 +83,9 @@ protected:
 
 public:
 	enum class TabStyle {
-		TEXT_ONLY,
-		ICON_ONLY,
 		TEXT_AND_ICON,
+		TEXT_ONLY,
+		ICON_ONLY
 	};
 
 	EditorDock::DockSlot dock_slot = EditorDock::DOCK_SLOT_NONE;

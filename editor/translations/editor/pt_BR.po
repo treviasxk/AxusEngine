@@ -2736,7 +2736,7 @@ msgid "Assets ZIP File"
 msgstr "Arquivo ZIP de Recursos"
 
 msgid "AssetLib"
-msgstr "Biblioteca de Recursos"
+msgstr "Packages"
 
 msgid "Error opening asset file for \"%s\" (not in ZIP format)."
 msgstr "Erro ao abrir o pacote \"%s\" (não está no formato ZIP)."

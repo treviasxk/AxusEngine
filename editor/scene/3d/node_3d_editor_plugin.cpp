@@ -3594,9 +3594,6 @@ void Node3DEditorViewport::_notification(int p_what) {
 			}
 
 			bool show_info = view_display_menu->get_popup()->is_item_checked(view_display_menu->get_popup()->get_item_index(VIEW_INFORMATION));
-			if (show_info != info_panel->is_visible()) {
-				info_panel->set_visible(show_info);
-			}
 
 			Camera3D *current_camera;
 
@@ -3606,32 +3603,10 @@ void Node3DEditorViewport::_notification(int p_what) {
 				current_camera = camera;
 			}
 
-			if (show_info) {
-				const String viewport_size = vformat(U"%d × %d", viewport->get_size().x * viewport->get_scaling_3d_scale(), viewport->get_size().y * viewport->get_scaling_3d_scale());
-				String text;
-				text += vformat(TTR("X: %s"), rtos(current_camera->get_position().x).pad_decimals(1)) + "\n";
-				text += vformat(TTR("Y: %s"), rtos(current_camera->get_position().y).pad_decimals(1)) + "\n";
-				text += vformat(TTR("Z: %s"), rtos(current_camera->get_position().z).pad_decimals(1)) + "\n";
-				text += "\n";
-				text += vformat(
-						TTR("Size: %s (%.1fMP)") + "\n",
-						viewport_size,
-						viewport->get_size().x * viewport->get_size().y * Math::pow(viewport->get_scaling_3d_scale(), 2) * 0.000001);
 
-				text += "\n";
-				text += vformat(TTR("Objects: %d"), viewport->get_render_info(Viewport::RENDER_INFO_TYPE_VISIBLE, Viewport::RENDER_INFO_OBJECTS_IN_FRAME)) + "\n";
-				text += vformat(TTR("Primitives: %d"), viewport->get_render_info(Viewport::RENDER_INFO_TYPE_VISIBLE, Viewport::RENDER_INFO_PRIMITIVES_IN_FRAME)) + "\n";
-				text += vformat(TTR("Draw Calls: %d"), viewport->get_render_info(Viewport::RENDER_INFO_TYPE_VISIBLE, Viewport::RENDER_INFO_DRAW_CALLS_IN_FRAME));
-
-				info_label->set_text(text);
-			}
-
-			// FPS Counter.
-			bool show_fps = view_display_menu->get_popup()->is_item_checked(view_display_menu->get_popup()->get_item_index(VIEW_FRAME_TIME));
-
-			if (show_fps != frame_time_panel->is_visible()) {
-				frame_time_panel->set_visible(show_fps);
-				RS::get_singleton()->viewport_set_measure_render_time(viewport->get_viewport_rid(), show_fps);
+			if (show_info != infos_panel->is_visible()) {
+				infos_panel->set_visible(show_info);
+				RS::get_singleton()->viewport_set_measure_render_time(viewport->get_viewport_rid(), show_info);
 				for (int i = 0; i < FRAME_TIME_HISTORY; i++) {
 					// Initialize to 120 FPS, so that the initial estimation until we get enough data is always reasonable.
 					cpu_time_history[i] = 8.333333;
@@ -3640,7 +3615,7 @@ void Node3DEditorViewport::_notification(int p_what) {
 				cpu_time_history_index = 0;
 				gpu_time_history_index = 0;
 			}
-			if (show_fps) {
+			if (show_info) {
 				cpu_time_history[cpu_time_history_index] = RS::get_singleton()->viewport_get_measured_render_time_cpu(viewport->get_viewport_rid());
 				cpu_time_history_index = (cpu_time_history_index + 1) % FRAME_TIME_HISTORY;
 				double cpu_time = 0.0;
@@ -3665,25 +3640,70 @@ void Node3DEditorViewport::_notification(int p_what) {
 				// Color labels depending on performance level ("good" = green, "OK" = yellow, "bad" = red).
 				// Middle point is at 15 ms.
 				cpu_time_label->set_text(vformat(TTR("CPU Time: %s ms"), rtos(cpu_time).pad_decimals(2)));
-				cpu_time_label->add_theme_color_override(
-						SceneStringName(font_color),
-						frame_time_gradient->get_color_at_offset(
-								Math::remap(cpu_time, 0, 30, 0, 1)));
+				cpu_time_label->add_theme_color_override(SceneStringName(font_color),frame_time_gradient->get_color_at_offset(Math::remap(cpu_time, 0, 30, 0, 1)));
 
 				gpu_time_label->set_text(vformat(TTR("GPU Time: %s ms"), rtos(gpu_time).pad_decimals(2)));
 				// Middle point is at 15 ms.
-				gpu_time_label->add_theme_color_override(
-						SceneStringName(font_color),
-						frame_time_gradient->get_color_at_offset(
-								Math::remap(gpu_time, 0, 30, 0, 1)));
+				gpu_time_label->add_theme_color_override(SceneStringName(font_color),frame_time_gradient->get_color_at_offset(Math::remap(gpu_time, 0, 30, 0, 1)));
 
 				const double fps = 1000.0 / gpu_time;
 				fps_label->set_text(vformat(TTR("FPS: %d"), fps));
+				
 				// Middle point is at 60 FPS.
-				fps_label->add_theme_color_override(
-						SceneStringName(font_color),
-						frame_time_gradient->get_color_at_offset(
-								Math::remap(fps, 110, 10, 0, 1)));
+				fps_label->add_theme_color_override(SceneStringName(font_color),frame_time_gradient->get_color_at_offset(Math::remap(fps, 110, 10, 0, 1)));
+
+				auto format_memory_bytes = [&](double p_bytes) {
+					double value = p_bytes;
+					const char *unit = "B";
+
+					if (value >= 1024.0) {
+						value /= 1024.0;
+						unit = "KB";
+					}
+					if (value >= 1024.0) {
+						value /= 1024.0;
+						unit = "MB";
+					}
+					if (value >= 1024.0) {
+						value /= 1024.0;
+						unit = "GB";
+					}
+
+					int decimals = value < 10.0 ? 2 : (value < 100.0 ? 1 : 0);
+					String formatted = rtos(value).pad_decimals(decimals);
+					formatted = TranslationServer::get_singleton()->format_number(formatted, _get_locale());
+					return formatted + " " + unit;
+				};
+
+				const double memory_size = 1073741824; // 1 GB, which is a reasonable upper limit for memory usage to be represented in green/yellow/red.
+
+				const double drawcalls = viewport->get_render_info(Viewport::RENDER_INFO_TYPE_VISIBLE, Viewport::RENDER_INFO_DRAW_CALLS_IN_FRAME);
+				drawcall_label->set_text(vformat(TTR("Draw Calls: %d"), drawcalls));
+				drawcall_label->add_theme_color_override(SceneStringName(font_color), frame_time_gradient->get_color_at_offset(Math::remap(drawcalls, 0, 1000, 0, 1)));
+
+				const double memory_usage = Memory::get_mem_usage();
+				memory_label->set_text(vformat(TTR("Memory: %s"), format_memory_bytes(memory_usage)));
+				memory_label->add_theme_color_override(SceneStringName(font_color), frame_time_gradient->get_color_at_offset(Math::remap(memory_usage, 0, memory_size * 4, 0, 1)));
+
+				const double memory_texture_usage = RS::get_singleton()->get_rendering_info(RSE::RENDERING_INFO_TEXTURE_MEM_USED);
+				memory_texture_label->set_text(vformat(TTR("Texture Mem: %s"), format_memory_bytes(memory_texture_usage)));
+				memory_texture_label->add_theme_color_override(SceneStringName(font_color), frame_time_gradient->get_color_at_offset(Math::remap(memory_texture_usage, 0, memory_size * 4, 0, 1)));
+
+				const double vram_usage = RS::get_singleton()->get_rendering_info(RSE::RENDERING_INFO_VIDEO_MEM_USED);
+				vram_label->set_text(vformat(TTR("Video Mem: %s"), format_memory_bytes(vram_usage)));
+				vram_label->add_theme_color_override(SceneStringName(font_color),frame_time_gradient->get_color_at_offset(Math::remap(vram_usage, 0, memory_size * 4, 0, 1)));
+
+
+				const String viewport_size = vformat(U"%d × %d", viewport->get_size().x * viewport->get_scaling_3d_scale(), viewport->get_size().y * viewport->get_scaling_3d_scale());
+
+				String text = vformat(TTR("Resolution: %s (%.1fMP)") + "\n", viewport_size, viewport->get_size().x * viewport->get_size().y * Math::pow(viewport->get_scaling_3d_scale(), 2) * 0.000001);
+				text += vformat(TTR("Position (%s"), rtos(current_camera->get_position().x).pad_decimals(1));
+				text += vformat(TTR(", %s"), rtos(current_camera->get_position().y).pad_decimals(1));
+				text += vformat(TTR(", %s)"), rtos(current_camera->get_position().z).pad_decimals(1)) + "\n";
+				text += vformat(TTR("Objects: %d"), viewport->get_render_info(Viewport::RENDER_INFO_TYPE_VISIBLE, Viewport::RENDER_INFO_OBJECTS_IN_FRAME)) + "\n";
+				text += vformat(TTR("Primitives: %d"), viewport->get_render_info(Viewport::RENDER_INFO_TYPE_VISIBLE, Viewport::RENDER_INFO_PRIMITIVES_IN_FRAME));
+
+				infos_label->set_text(text);
 			}
 		} break;
 
@@ -3807,17 +3827,15 @@ void Node3DEditorViewport::_notification(int p_what) {
 			override_button_stylebox(pilot_camera, information_3d_stylebox);
 			override_label_colors(pilot_camera);
 
-			info_panel->add_theme_style_override(SceneStringName(panel), information_3d_stylebox);
-			override_label_colors(info_label);
 			tooltip_panel->add_theme_style_override(CoreStringName(normal), information_3d_stylebox);
 
-			frame_time_panel->add_theme_style_override(SceneStringName(panel), information_3d_stylebox);
+			infos_panel->add_theme_style_override(SceneStringName(panel), information_3d_stylebox);
 			// Set a minimum width to prevent the width from changing all the time
 			// when numbers vary rapidly. This minimum width is set based on a
 			// GPU time of 999.99 ms in the current editor language.
 			const float min_width = get_theme_font(SNAME("main"), EditorStringName(EditorFonts))->get_string_size(vformat(TTR("GPU Time: %s ms"), 999.99)).x;
-			frame_time_panel->set_custom_minimum_size(Size2(min_width, 0) * EDSCALE);
-			frame_time_vbox->add_theme_constant_override("separation", Math::round(-1 * EDSCALE));
+			infos_panel->set_custom_minimum_size(Size2(min_width, 0) * EDSCALE);
+			infos_vbox->add_theme_constant_override("separation", Math::round(-7 * EDSCALE));
 
 			cinema_label->add_theme_style_override(CoreStringName(normal), information_3d_stylebox);
 			locked_label->add_theme_style_override(CoreStringName(normal), information_3d_stylebox);
@@ -4508,11 +4526,6 @@ void Node3DEditorViewport::_menu_option(int p_option) {
 			view_display_menu->get_popup()->set_item_checked(idx, !current);
 
 		} break;
-		case VIEW_FRAME_TIME: {
-			int idx = view_display_menu->get_popup()->get_item_index(VIEW_FRAME_TIME);
-			bool current = view_display_menu->get_popup()->is_item_checked(idx);
-			view_display_menu->get_popup()->set_item_checked(idx, !current);
-		} break;
 		case VIEW_GRID: {
 			int idx = view_display_menu->get_popup()->get_item_index(VIEW_GRID);
 			bool current = view_display_menu->get_popup()->is_item_checked(idx);
@@ -5135,14 +5148,6 @@ void Node3DEditorViewport::set_state(const Dictionary &p_state) {
 			_menu_option(VIEW_INFORMATION);
 		}
 	}
-	if (p_state.has("frame_time")) {
-		bool fps = p_state["frame_time"];
-
-		int idx = view_display_menu->get_popup()->get_item_index(VIEW_FRAME_TIME);
-		if (view_display_menu->get_popup()->is_item_checked(idx) != fps) {
-			_menu_option(VIEW_FRAME_TIME);
-		}
-	}
 	if (p_state.has("half_res")) {
 		bool half_res = p_state["half_res"];
 
@@ -5223,7 +5228,6 @@ Dictionary Node3DEditorViewport::get_state() const {
 	d["transform_gizmo"] = view_display_menu->get_popup()->is_item_checked(view_display_menu->get_popup()->get_item_index(VIEW_TRANSFORM_GIZMO));
 	d["grid"] = view_display_menu->get_popup()->is_item_checked(view_display_menu->get_popup()->get_item_index(VIEW_GRID));
 	d["information"] = view_display_menu->get_popup()->is_item_checked(view_display_menu->get_popup()->get_item_index(VIEW_INFORMATION));
-	d["frame_time"] = view_display_menu->get_popup()->is_item_checked(view_display_menu->get_popup()->get_item_index(VIEW_FRAME_TIME));
 	d["half_res"] = view_display_menu->get_popup()->is_item_checked(view_display_menu->get_popup()->get_item_index(VIEW_HALF_RESOLUTION));
 	d["cinematic_preview"] = view_display_menu->get_popup()->is_item_checked(view_display_menu->get_popup()->get_item_index(VIEW_CINEMATIC_PREVIEW));
 	if (previewing) {
@@ -6751,7 +6755,6 @@ Node3DEditorViewport::Node3DEditorViewport(Node3DEditor *p_spatial_editor, int p
 	view_display_menu->get_popup()->add_check_shortcut(ED_SHORTCUT("spatial_editor/view_transform_gizmo", TTRC("View Transform Gizmo")), VIEW_TRANSFORM_GIZMO);
 	view_display_menu->get_popup()->add_check_shortcut(ED_SHORTCUT("spatial_editor/view_grid_lines", TTRC("View Grid")), VIEW_GRID);
 	view_display_menu->get_popup()->add_check_shortcut(ED_SHORTCUT("spatial_editor/view_information", TTRC("View Information")), VIEW_INFORMATION);
-	view_display_menu->get_popup()->add_check_shortcut(ED_SHORTCUT("spatial_editor/view_fps", TTRC("View Frame Time")), VIEW_FRAME_TIME);
 	view_display_menu->get_popup()->set_item_checked(view_display_menu->get_popup()->get_item_index(VIEW_ENVIRONMENT), true);
 	view_display_menu->get_popup()->add_separator();
 	view_display_menu->get_popup()->add_check_shortcut(ED_SHORTCUT("spatial_editor/view_half_resolution", TTRC("Half Resolution")), VIEW_HALF_RESOLUTION);
@@ -6835,21 +6838,6 @@ Node3DEditorViewport::Node3DEditorViewport(Node3DEditor *p_spatial_editor, int p
 	bottom_center_vbox->set_v_grow_direction(GROW_DIRECTION_BEGIN);
 	surface->add_child(bottom_center_vbox);
 
-	info_panel = memnew(PanelContainer);
-	info_panel->set_anchor_and_offset(SIDE_LEFT, ANCHOR_END, -90 * EDSCALE);
-	info_panel->set_anchor_and_offset(SIDE_TOP, ANCHOR_END, -90 * EDSCALE);
-	info_panel->set_anchor_and_offset(SIDE_RIGHT, ANCHOR_END, -10 * EDSCALE);
-	info_panel->set_anchor_and_offset(SIDE_BOTTOM, ANCHOR_END, -10 * EDSCALE);
-	info_panel->set_h_grow_direction(GROW_DIRECTION_BEGIN);
-	info_panel->set_v_grow_direction(GROW_DIRECTION_BEGIN);
-	info_panel->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	surface->add_child(info_panel);
-	info_panel->hide();
-
-	info_label = memnew(Label);
-	info_label->set_focus_mode(FOCUS_ACCESSIBILITY);
-	info_panel->add_child(info_label);
-
 	cinema_label = memnew(Label);
 	cinema_label->set_anchor_and_offset(SIDE_TOP, ANCHOR_BEGIN, 10 * EDSCALE);
 	cinema_label->set_h_grow_direction(GROW_DIRECTION_END);
@@ -6931,23 +6919,39 @@ Node3DEditorViewport::Node3DEditorViewport(Node3DEditor *p_spatial_editor, int p
 	rotation_control->set_focus_mode(FOCUS_CLICK);
 	top_right_vbox->add_child(rotation_control);
 
-	frame_time_panel = memnew(PanelContainer);
-	frame_time_panel->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	top_right_vbox->add_child(frame_time_panel);
-	frame_time_panel->hide();
+	infos_panel = memnew(PanelContainer);
+	infos_panel->set_mouse_filter(MOUSE_FILTER_IGNORE);
+	top_right_vbox->add_child(infos_panel);
+	infos_panel->hide();
 
-	frame_time_vbox = memnew(VBoxContainer);
-	frame_time_panel->add_child(frame_time_vbox);
+	infos_vbox = memnew(VBoxContainer);
+	infos_panel->add_child(infos_vbox);
 
 	// Individual Labels are used to allow coloring each label with its own color.
 	cpu_time_label = memnew(Label);
-	frame_time_vbox->add_child(cpu_time_label);
+	infos_vbox->add_child(cpu_time_label);
 
 	gpu_time_label = memnew(Label);
-	frame_time_vbox->add_child(gpu_time_label);
+	infos_vbox->add_child(gpu_time_label);
 
 	fps_label = memnew(Label);
-	frame_time_vbox->add_child(fps_label);
+	infos_vbox->add_child(fps_label);
+
+	drawcall_label = memnew(Label);
+	infos_vbox->add_child(drawcall_label);
+
+	memory_label = memnew(Label);
+	infos_vbox->add_child(memory_label);
+
+	memory_texture_label = memnew(Label);
+	infos_vbox->add_child(memory_texture_label);
+
+	vram_label = memnew(Label);
+	infos_vbox->add_child(vram_label);
+
+	infos_label = memnew(Label);
+	infos_label->add_theme_constant_override("line_spacing", 0);
+	infos_vbox->add_child(infos_label);
 
 	surface->add_child(top_right_vbox);
 
@@ -7823,6 +7827,11 @@ void Node3DEditor::_xform_dialog_action() {
 
 void Node3DEditor::_menu_item_toggled(bool pressed, int p_option) {
 	switch (p_option) {
+		case MENU_TOOL_TOGGLE_3D:{
+			set_toggle_3d(false);
+			EditorNode::get_singleton()->get_editor_main_screen()->select(EditorMainScreen::EDITOR_2D);
+		} break;
+
 		case MENU_TOOL_LOCAL_COORDS: {
 			tool_option_button[TOOL_OPT_LOCAL_COORDS]->set_pressed(pressed);
 			update_transform_gizmo();
@@ -9483,6 +9492,7 @@ void Node3DEditor::_update_theme() {
 	tool_button[TOOL_UNGROUP_SELECTED]->set_button_icon(get_editor_theme_icon(SNAME("Ungroup")));
 	tool_button[TOOL_RULER]->set_button_icon(get_editor_theme_icon(SNAME("Ruler")));
 
+	tool_option_button[TOOL_TOGGLE_3D]->set_button_icon(get_editor_theme_icon(SNAME("3D")));
 	tool_option_button[TOOL_OPT_LOCAL_COORDS]->set_button_icon(get_editor_theme_icon(SNAME("Object")));
 	tool_option_button[TOOL_OPT_USE_SNAP]->set_button_icon(get_editor_theme_icon(SNAME("Snap")));
 	tool_option_button[TOOL_OPT_USE_TRACKBALL]->set_button_icon(get_editor_theme_icon(SNAME("Trackball")));
@@ -10440,6 +10450,14 @@ Node3DEditor::Node3DEditor() {
 	tool_button[TOOL_RULER]->set_accessibility_name(TTRC("Ruler Mode"));
 
 	main_menu_hbox->add_child(memnew(VSeparator));
+
+	tool_option_button[TOOL_TOGGLE_3D] = memnew(Button);
+	main_menu_hbox->add_child(tool_option_button[TOOL_TOGGLE_3D]);
+	tool_option_button[TOOL_TOGGLE_3D]->set_toggle_mode(true);
+	tool_option_button[TOOL_TOGGLE_3D]->set_theme_type_variation(SceneStringName(FlatButton));
+	tool_option_button[TOOL_TOGGLE_3D]->connect(SceneStringName(toggled), callable_mp(this, &Node3DEditor::_menu_item_toggled).bind(MENU_TOOL_TOGGLE_3D));
+	tool_option_button[TOOL_TOGGLE_3D]->set_shortcut_context(this);
+	tool_option_button[TOOL_TOGGLE_3D]->set_accessibility_name(TTRC("2D Mode"));
 
 	tool_option_button[TOOL_OPT_LOCAL_COORDS] = memnew(Button);
 	main_menu_hbox->add_child(tool_option_button[TOOL_OPT_LOCAL_COORDS]);

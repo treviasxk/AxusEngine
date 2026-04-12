@@ -1,1 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><g fill="none" stroke="#e0e0e0" stroke-linejoin="round" stroke-width="2"><path d="M8 1v9l4-4m-4 4L4 6"/><path stroke-linecap="round" d="M2 10v4h12v-4"/></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="18"
+   height="18"
+   viewBox="0 0 18 18"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1">
+    <g
+       id="g8"
+       transform="matrix(1.0829755,0,0,1.1722206,0.33619608,-1.2256006)"
+       style="stroke-width:0.887536">
+      <rect
+         style="fill:none;stroke:#ffffff;stroke-width:0.88753;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+         id="rect2"
+         width="11.186611"
+         height="6.7768841"
+         x="2.4066944"
+         y="6.9817228"
+         rx="0"
+         ry="0" />
+      <path
+         id="rect2-3"
+         style="fill:none;stroke:#ffffff;stroke-width:0.88753;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:0;stroke-opacity:1;paint-order:stroke markers fill"
+         d="m 3.1001885,3.6879396 h 9.7996235 l 0.693512,3.1804289 H 2.4066761 Z" />
+      <path
+         id="rect8"
+         style="fill:none;stroke:#ffffff;stroke-width:0.923328;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:0;stroke-opacity:1;paint-order:stroke markers fill"
+         d="M 7.0332523,2.1637207 9.009906,2.1187624 9.1911712,5.5679156 H 6.8088288 Z"
+         transform="matrix(1,0,0,0.92397318,0,1.7143088)" />
+      <path
+         id="rect8-1"
+         style="fill:none;stroke:#ffffff;stroke-width:0.887536;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:5;stroke-opacity:1;paint-order:stroke markers fill"
+         d="m 6.8088288,5.6971011 h 2.3823424 v 3.9497905 c -0.7213676,-0.6314036 -1.5189169,-0.6818517 -2.3823424,0 z"
+         transform="matrix(1,0,0,0.92397318,0,1.7143088)" />
+    </g>
+  </g>
+</svg>

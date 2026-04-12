@@ -94,12 +94,15 @@ class ImageTextureLayered : public TextureLayered {
 	int height = 0;
 	int layers = 0;
 	bool mipmaps = false;
+	TypedArray<Texture2D> texture_array;
 
+	TypedArray<Texture2D> get_texture() const;
+	void set_texture(const TypedArray<Texture2D> &p_texture);
+	
 	Error _create_from_images(const TypedArray<Image> &p_images);
 
 	TypedArray<Image> _get_images() const;
 	void _set_images(const TypedArray<Image> &p_images);
-
 protected:
 	static void _bind_methods();
 
@@ -168,9 +171,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	Texture2DArray() :
-			ImageTextureLayered(LAYERED_TYPE_2D_ARRAY) {}
-
+	Texture2DArray() : ImageTextureLayered(LAYERED_TYPE_2D_ARRAY) {}
 	virtual Ref<Resource> create_placeholder() const;
 };
 

@@ -137,7 +137,6 @@ class Node3DEditorViewport : public Control {
 		VIEW_TRANSFORM_GIZMO,
 		VIEW_GRID,
 		VIEW_INFORMATION,
-		VIEW_FRAME_TIME,
 
 		// < Keep in sync with menu.
 		VIEW_DISPLAY_NORMAL,
@@ -254,8 +253,6 @@ private:
 	bool vertex_snap_has_source = false;
 	HashMap<ObjectID, Vector3> vertex_snap_original_positions;
 
-	PanelContainer *info_panel = nullptr;
-	Label *info_label = nullptr;
 	Label *cinema_label = nullptr;
 	Label *locked_label = nullptr;
 	Label *zoom_limit_label = nullptr;
@@ -268,11 +265,16 @@ private:
 	ViewportNavigationControl *look_control = nullptr;
 	ViewportRotationControl *rotation_control = nullptr;
 	Ref<Gradient> frame_time_gradient;
-	PanelContainer *frame_time_panel = nullptr;
-	VBoxContainer *frame_time_vbox = nullptr;
+	PanelContainer *infos_panel = nullptr;
+	VBoxContainer *infos_vbox = nullptr;
 	Label *cpu_time_label = nullptr;
 	Label *gpu_time_label = nullptr;
 	Label *fps_label = nullptr;
+	Label *drawcall_label = nullptr;
+	Label *memory_label = nullptr;
+	Label *memory_texture_label = nullptr;
+	Label *vram_label = nullptr;
+	Label *infos_label = nullptr;
 
 	struct _RayResult {
 		Node3D *item = nullptr;
@@ -613,6 +615,7 @@ public:
 	};
 
 	enum ToolOptions {
+		TOOL_TOGGLE_3D,
 		TOOL_OPT_LOCAL_COORDS,
 		TOOL_OPT_USE_SNAP,
 		TOOL_OPT_USE_TRACKBALL,
@@ -717,6 +720,7 @@ private:
 		MENU_TOOL_SCALE,
 		MENU_TOOL_SELECT,
 		MENU_TOOL_LIST_SELECT,
+		MENU_TOOL_TOGGLE_3D,
 		MENU_TOOL_LOCAL_COORDS,
 		MENU_TOOL_USE_SNAP,
 		MENU_TOOL_USE_TRACKBALL,
@@ -940,6 +944,9 @@ public:
 	bool is_gizmo_visible() const;
 
 	ToolMode get_tool_mode() const { return tool_mode; }
+	bool is_toggle_3d() const { return tool_option_button[Node3DEditor::TOOL_TOGGLE_3D]->is_pressed(); }
+	void set_toggle_3d(bool on) const { tool_option_button[Node3DEditor::TOOL_TOGGLE_3D]->set_pressed(on); }
+
 	bool are_local_coords_enabled() const { return tool_option_button[Node3DEditor::TOOL_OPT_LOCAL_COORDS]->is_pressed(); }
 	void set_local_coords_enabled(bool on) const { tool_option_button[Node3DEditor::TOOL_OPT_LOCAL_COORDS]->set_pressed(on); }
 	bool is_preserve_children_transform_enabled() const { return tool_option_button[Node3DEditor::TOOL_OPT_PRESERVE_CHILDREN_TRANSFORM]->is_pressed(); }
