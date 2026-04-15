@@ -149,16 +149,16 @@ void ProjectManager::_notification(int p_what) {
 // Utility data.
 
 Ref<Texture2D> ProjectManager::_file_dialog_get_icon(const String &p_path) {
-	if (p_path.has_extension("godot")) {
-		return singleton->icon_type_cache["GodotMonochrome"];
+	if (p_path.has_extension("axus")) {
+		return singleton->icon_type_cache["AxusMonochrome"];
 	}
 
 	return singleton->icon_type_cache["Object"];
 }
 
 Ref<Texture2D> ProjectManager::_file_dialog_get_thumbnail(const String &p_path) {
-	if (p_path.has_extension("godot")) {
-		return singleton->icon_type_cache["GodotFile"];
+	if (p_path.has_extension("axus")) {
+		return singleton->icon_type_cache["AxusFile"];
 	}
 
 	return Ref<Texture2D>();
