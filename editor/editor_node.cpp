@@ -9058,7 +9058,14 @@ EditorNode::EditorNode() {
 	renderer->set_tooltip_text(TTRC("Choose a renderer.\n\nNotes:\n- On mobile platforms, the Mobile renderer is used if Forward+ is selected here.\n- On the web platform, the Compatibility renderer is always used."));
 	renderer->set_accessibility_name(TTRC("Renderer"));
 
-	right_menu_hb->add_child(renderer);
+	Button *logo_button = memnew(Button);
+	logo_button->set_flat(true);
+	logo_button->set_disabled(true);
+	logo_button->set_focus_mode(Control::FOCUS_NONE);
+	logo_button->set_mouse_filter(Control::MOUSE_FILTER_IGNORE);
+	logo_button->set_button_icon(theme->get_icon(SNAME("Logo"), EditorStringName(EditorIcons)));
+	title_bar->add_child(logo_button);
+	title_bar->move_child(logo_button, 0);
 
 	title_bar->add_child(right_menu_hb);
 
