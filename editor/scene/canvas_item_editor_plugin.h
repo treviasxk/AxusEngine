@@ -342,6 +342,7 @@ private:
 	Button *scene_paint_button = nullptr;
 	Button *scale_button = nullptr;
 	Button *rotate_button = nullptr;
+	Button *scene_3d_button = nullptr;
 
 	Button *list_select_button = nullptr;
 	Button *pivot_button = nullptr;
@@ -547,6 +548,7 @@ private:
 	void _update_zoom(real_t p_zoom);
 	void _shortcut_zoom_set(real_t p_zoom);
 	void _zoom_on_position(real_t p_zoom, Point2 p_position = Point2());
+	void _button_scene_3d(bool p_status);
 	void _button_toggle_local_space(bool p_status);
 	void _button_toggle_smart_snap(bool p_status);
 	void _button_toggle_grid_snap(bool p_status);

@@ -7912,6 +7912,11 @@ void Node3DEditor::_xform_dialog_action() {
 
 void Node3DEditor::_menu_item_toggled(bool pressed, int p_option) {
 	switch (p_option) {
+		case MENU_TOOL_SCENE_2D: {
+			tool_option_button[TOOL_OPT_SCENE_2D]->set_pressed(false);
+			EditorNode::get_singleton()->get_editor_main_screen()->select(EditorMainScreen::EDITOR_2D);
+		} break;
+
 		case MENU_TOOL_LOCAL_COORDS: {
 			tool_option_button[TOOL_OPT_LOCAL_COORDS]->set_pressed(pressed);
 			update_transform_gizmo();
@@ -9588,6 +9593,7 @@ void Node3DEditor::_update_theme() {
 	tool_button[TOOL_UNGROUP_SELECTED]->set_button_icon(get_editor_theme_icon(SNAME("Ungroup")));
 	tool_button[TOOL_RULER]->set_button_icon(get_editor_theme_icon(SNAME("Ruler")));
 
+	tool_option_button[TOOL_OPT_SCENE_2D]->set_button_icon(get_editor_theme_icon(SNAME("2D")));
 	tool_option_button[TOOL_OPT_LOCAL_COORDS]->set_button_icon(get_editor_theme_icon(SNAME("Object")));
 	tool_option_button[TOOL_OPT_USE_SNAP]->set_button_icon(get_editor_theme_icon(SNAME("Snap")));
 	tool_option_button[TOOL_OPT_USE_TRACKBALL]->set_button_icon(get_editor_theme_icon(SNAME("Trackball")));
@@ -10545,6 +10551,15 @@ Node3DEditor::Node3DEditor() {
 	tool_button[TOOL_RULER]->set_accessibility_name(TTRC("Ruler Mode"));
 
 	main_menu_hbox->add_child(memnew(VSeparator));
+
+	tool_option_button[TOOL_OPT_SCENE_2D] = memnew(Button);
+	main_menu_hbox->add_child(tool_option_button[TOOL_OPT_SCENE_2D]);
+	tool_option_button[TOOL_OPT_SCENE_2D]->set_toggle_mode(true);
+	tool_option_button[TOOL_OPT_SCENE_2D]->set_theme_type_variation(SceneStringName(FlatButton));
+	tool_option_button[TOOL_OPT_SCENE_2D]->set_tooltip_text(TTRC("Switch To 2D Scene"));
+	tool_option_button[TOOL_OPT_SCENE_2D]->connect(SceneStringName(toggled), callable_mp(this, &Node3DEditor::_menu_item_toggled).bind(MENU_TOOL_SCENE_2D));
+	tool_option_button[TOOL_OPT_SCENE_2D]->set_shortcut_context(this);
+	tool_option_button[TOOL_OPT_SCENE_2D]->set_accessibility_name(TTRC("Switch To 2D Scene"));
 
 	tool_option_button[TOOL_OPT_LOCAL_COORDS] = memnew(Button);
 	main_menu_hbox->add_child(tool_option_button[TOOL_OPT_LOCAL_COORDS]);

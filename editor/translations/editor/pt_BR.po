@@ -12077,6 +12077,12 @@ msgstr "Clique Esquerdo+Arrastar: Medir a distância entre dois pontos em 3D."
 msgid "Ruler Mode"
 msgstr "Modo de Régua"
 
+msgid "Switch To 3D Scene"
+msgstr "Trocar para Cena 3D"
+
+msgid "Switch To 2D Scene"
+msgstr "Trocar para Cena 2D"
+
 msgid "Use Local Space"
 msgstr "Usar Espaço Local"
 
