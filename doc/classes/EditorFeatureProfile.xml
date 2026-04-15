@@ -100,9 +100,6 @@
 		<constant name="FEATURE_3D" value="0" enum="Feature">
 			The 3D editor. If this feature is disabled, the 3D editor won't display but 3D nodes will still display in the Create New Node dialog.
 		</constant>
-		<constant name="FEATURE_SCRIPT" value="1" enum="Feature">
-			The Script tab, which contains the script editor and class reference browser. If this feature is disabled, the Script tab won't display.
-		</constant>
 		<constant name="FEATURE_ASSET_LIB" value="2" enum="Feature">
 			The Asset Store tab. If this feature is disabled, the Asset Store tab won't display.
 		</constant>

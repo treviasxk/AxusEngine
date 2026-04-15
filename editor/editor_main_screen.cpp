@@ -43,7 +43,7 @@ void EditorMainScreen::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_READY: {
 			set_accessibility_region(true);
-			if (EDITOR_3D < buttons.size() && buttons[EDITOR_3D]->is_visible()) {
+			if (EDITOR_3D < buttons.size()) {
 				// If the 3D editor is enabled, use this as the default.
 				select(EDITOR_3D);
 				return;
@@ -52,11 +52,8 @@ void EditorMainScreen::_notification(int p_what) {
 			// Switch to the first main screen plugin that is enabled. Usually this is
 			// 2D, but may be subsequent ones if 2D is disabled in the feature profile.
 			for (int i = 0; i < buttons.size(); i++) {
-				Button *editor_button = buttons[i];
-				if (editor_button->is_visible()) {
-					select(i);
-					return;
-				}
+				select(i);
+				return;
 			}
 
 			select(-1);
@@ -174,10 +171,6 @@ void EditorMainScreen::select(int p_index) {
 
 	ERR_FAIL_INDEX(p_index, editor_table.size());
 
-	if (!buttons[p_index]->is_visible()) { // Button hidden, no editor.
-		return;
-	}
-
 	for (int i = 0; i < buttons.size(); i++) {
 		buttons[i]->set_pressed_no_signal(i == p_index);
 	}
@@ -294,10 +287,6 @@ void EditorMainScreen::remove_main_plugin(EditorPlugin *p_editor) {
 	// all buttons behind it to point to the correct main window.
 	for (int i = buttons.size() - 1; i >= 0; i--) {
 		if (p_editor->get_plugin_name() == buttons[i]->get_text()) {
-			if (buttons[i]->is_pressed()) {
-				select(EDITOR_SCRIPT);
-			}
-
 			memdelete(buttons[i]);
 			buttons.remove_at(i);
 

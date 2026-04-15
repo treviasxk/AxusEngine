@@ -45,7 +45,6 @@ public:
 	enum EditorTable {
 		EDITOR_2D = 0,
 		EDITOR_3D,
-		EDITOR_SCRIPT,
 		EDITOR_GAME,
 		EDITOR_ASSETLIB,
 	};
