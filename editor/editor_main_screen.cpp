@@ -255,7 +255,7 @@ VBoxContainer *EditorMainScreen::get_control() const {
 void EditorMainScreen::add_main_plugin(EditorPlugin *p_editor) {
 	Button *tb = memnew(Button);
 	tb->set_toggle_mode(true);
-	tb->set_theme_type_variation("MainScreenButton");
+	tb->set_theme_type_variation("MainPluginsButton");
 	tb->set_name(p_editor->get_plugin_name());
 	tb->set_text(p_editor->get_plugin_name());
 

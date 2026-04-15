@@ -320,7 +320,7 @@ Button *ProjectManager::_add_main_view(MainViewTab p_id, const String &p_name, c
 
 	Button *toggle_button = memnew(Button);
 	toggle_button->set_flat(true);
-	toggle_button->set_theme_type_variation("MainScreenButton");
+	toggle_button->set_theme_type_variation("MainPluginsButton");
 	toggle_button->set_toggle_mode(true);
 	toggle_button->set_button_group(main_view_toggles_group);
 	toggle_button->set_text(p_name);

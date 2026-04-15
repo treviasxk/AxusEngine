@@ -8202,7 +8202,7 @@ void EditorNode::_update_main_menu_type() {
 	if (new_menu_type == MENU_TYPE_COMPACT) {
 		main_menu_button = memnew(MenuButton);
 		main_menu_button->set_text(TTRC("Main Menu"));
-		main_menu_button->set_theme_type_variation("MainScreenButton");
+		main_menu_button->set_theme_type_variation("MainPluginsButton");
 		main_menu_button->set_focus_mode(Control::FOCUS_NONE);
 		if (is_inside_tree()) {
 			main_menu_button->set_button_icon(theme->get_icon(SNAME("TripleBar"), EditorStringName(EditorIcons)));
